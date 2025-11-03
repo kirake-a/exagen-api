@@ -2,9 +2,26 @@ services:
   mysql:
     image: 'mysql:latest'
     environment:
-      - 'MYSQL_DATABASE=mydatabase'
-      - 'MYSQL_PASSWORD=secret'
-      - 'MYSQL_ROOT_PASSWORD=verysecret'
-      - 'MYSQL_USER=myuser'
+      - 'MYSQL_DATABASE=exagen-api'
+      - 'MYSQL_PASSWORD=3x4g3n4p1'
+      - 'MYSQL_ROOT_PASSWORD=3x4g3n4p1'
     ports:
-      - '3306'
+      - '3304:3306'
+    volumes:
+      - exagen-db:/var/lib/mysql
+    networks:
+      - default
+
+  phpmyadmin:
+    image: 'phpmyadmin:latest'
+    links:
+      - mysql:db
+    ports:
+      - '8001:80'
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+
+volumes:
+  exagen-db:
