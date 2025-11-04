@@ -28,4 +28,8 @@ public class OpenQuestionSchema {
 
     @ManyToMany(mappedBy = "openQuestions", fetch = FetchType.LAZY)
     private Set<TestSchema> tests = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private CategorySchema category;
 }
