@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SecureRouter {
 
     @GetMapping("/")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<String>> index() {
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
