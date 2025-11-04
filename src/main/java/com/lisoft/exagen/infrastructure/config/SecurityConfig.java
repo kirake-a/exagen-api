@@ -23,6 +23,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.List;
 
+import static com.lisoft.exagen.domain.utils.Constants.API_VERSION;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -44,7 +45,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/public/**").permitAll()
+                        .requestMatchers(API_VERSION + "/public/**").permitAll()
                         .requestMatchers(
                                 "/docs/**",
                                 "/swagger-ui/**",

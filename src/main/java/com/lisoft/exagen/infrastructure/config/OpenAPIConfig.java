@@ -9,6 +9,8 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 
+import static com.lisoft.exagen.domain.utils.Constants.OPEN_API_VERSION;
+
 @Configuration
 @SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 public class OpenAPIConfig {
@@ -17,7 +19,7 @@ public class OpenAPIConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Exagen")
-                        .version("v0.0.1")
+                        .version(OPEN_API_VERSION)
                         .description("API to manage all exagen requests")
                         .license(new License()
                                 .name("Github Repository")

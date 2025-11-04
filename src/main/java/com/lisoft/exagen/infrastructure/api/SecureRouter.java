@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.lisoft.exagen.domain.utils.Constants.API_VERSION;
+
 @RestController
-@RequestMapping("/api/v1/secure")
+@RequestMapping(API_VERSION + "/secure")
 @SecurityRequirement(name = "bearerAuth")
 public class SecureRouter {
 
