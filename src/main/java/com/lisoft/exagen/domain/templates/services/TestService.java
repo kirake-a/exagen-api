@@ -13,5 +13,5 @@ public interface TestService {
 
     Test createTest(Test test);
 
-    Test deleteTest(String testId);
+    Test deleteTest(String testId, String userId);
 }
