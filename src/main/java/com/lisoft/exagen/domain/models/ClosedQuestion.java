@@ -1,7 +1,6 @@
 package com.lisoft.exagen.domain.models;
 
 import java.util.List;
-import java.util.Set;
 
 public record ClosedQuestion(
         Integer id,
