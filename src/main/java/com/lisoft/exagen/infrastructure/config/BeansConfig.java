@@ -1,14 +1,29 @@
 package com.lisoft.exagen.infrastructure.config;
 
 import com.lisoft.exagen.application.services.TestServiceImpl;
-import com.lisoft.exagen.domain.templates.repositories.TestReposity;
+import com.lisoft.exagen.domain.templates.repositories.TestRepository;
+import com.lisoft.exagen.domain.templates.repositories.ClosedQuestionRepository;
+import com.lisoft.exagen.domain.templates.repositories.OpenQuestionRepository;
+import com.lisoft.exagen.application.services.ClosedQuestionServiceImpl;
+import com.lisoft.exagen.application.services.OpenQuestionServiceImpl;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BeansConfig {
     @Bean
-    TestServiceImpl testService(TestReposity testRepository) {
+    TestServiceImpl testService(TestRepository testRepository) {
         return new TestServiceImpl(testRepository);
+    }
+
+    @Bean
+    OpenQuestionServiceImpl openQuestionService(OpenQuestionRepository openQuestionRepository) {
+        return new OpenQuestionServiceImpl(openQuestionRepository);
+    }
+
+    @Bean
+    ClosedQuestionServiceImpl closedQuestionService(ClosedQuestionRepository closedQuestionRepository) {
+        return new ClosedQuestionServiceImpl(closedQuestionRepository);
     }
 }

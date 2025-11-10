@@ -2,7 +2,7 @@ package com.lisoft.exagen.application.services;
 
 import com.lisoft.exagen.domain.exceptions.ResourceNotFoundException;
 import com.lisoft.exagen.domain.models.Test;
-import com.lisoft.exagen.domain.templates.repositories.TestReposity;
+import com.lisoft.exagen.domain.templates.repositories.TestRepository;
 import com.lisoft.exagen.domain.templates.services.TestService;
 import static com.lisoft.exagen.domain.utils.Constants.INVALID_ARGUMENT_MESSAGE;
 import static com.lisoft.exagen.domain.utils.Constants.USER_ID_CANNOT_BE_NULL_MESSAGE;
@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class TestServiceImpl implements TestService {
-    private final TestReposity repository;
+    private final TestRepository repository;
 
     private final Logger logger = LoggerFactory.getLogger(TestServiceImpl.class);
 
-    public TestServiceImpl(TestReposity repository) {
+    public TestServiceImpl(TestRepository repository) {
         this.repository = repository;
     }
 

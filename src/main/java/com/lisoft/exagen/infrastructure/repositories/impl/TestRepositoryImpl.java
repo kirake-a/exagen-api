@@ -1,6 +1,6 @@
 package com.lisoft.exagen.infrastructure.repositories.impl;
 
-import com.lisoft.exagen.domain.templates.repositories.TestReposity;
+import com.lisoft.exagen.domain.templates.repositories.TestRepository;
 import com.lisoft.exagen.domain.models.Test;
 import com.lisoft.exagen.infrastructure.mappers.TestMapper;
 import com.lisoft.exagen.infrastructure.repositories.jpa.TestJpaRepository;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class TestRepositoryImpl implements TestReposity {
+public class TestRepositoryImpl implements TestRepository {
     private final TestJpaRepository jpaRepository;
 
     public TestRepositoryImpl(TestJpaRepository jpaRepository) {
