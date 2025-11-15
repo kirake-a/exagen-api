@@ -61,4 +61,15 @@ public class OpenQuestionRepositoryImpl implements OpenQuestionRepository {
         OpenQuestionSchema updated = jpaRepository.save(schema);
         return OpenQuestionMapper.toModel(updated);
     }
+
+    @Override
+    public OpenQuestion deleteOpenQuestion(Integer id) {
+        Optional<OpenQuestionSchema> schemaOpt = jpaRepository.findById(id);
+        if (schemaOpt.isPresent()) {
+            OpenQuestionSchema schema = schemaOpt.get();
+            jpaRepository.delete(schema);
+            return OpenQuestionMapper.toModel(schema);
+        }
+        return null;
+    }
 }

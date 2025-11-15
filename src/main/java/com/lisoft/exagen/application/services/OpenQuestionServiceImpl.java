@@ -103,4 +103,24 @@ public class OpenQuestionServiceImpl implements OpenQuestionService {
         logger.info("Updated open question with id {}", updated.id());
         return updated;
     }
+
+    @Override
+    @Transactional
+    public OpenQuestion deleteOpenQuestion(Integer openQuestionId, String userId) {
+        if (Objects.isNull(openQuestionId)) {
+            String errorMessage = INVALID_ARGUMENT_MESSAGE + "OpenQuestion ID cannot be null";
+            logger.error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
+        }
+        if (Objects.isNull(userId)) {
+            String errorMessage = INVALID_ARGUMENT_MESSAGE + USER_ID_CANNOT_BE_NULL_MESSAGE;
+            logger.error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        logger.info("Deleting open question with id {} for user {}", openQuestionId, userId);
+        OpenQuestion deleted = repository.deleteOpenQuestion(openQuestionId);
+        logger.info("Deleted open question with id {}", deleted.id());
+        return deleted;
+    }
 }

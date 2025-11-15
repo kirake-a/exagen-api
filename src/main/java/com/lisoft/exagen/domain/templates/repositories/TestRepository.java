@@ -15,4 +15,6 @@ public interface TestRepository {
     Test createTest(Test test);
 
     Test deleteTest(String id);
+
+    Test updateTest(String id, Test updatedTest);
 }

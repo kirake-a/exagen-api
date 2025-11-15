@@ -91,7 +91,7 @@ public class ClosedQuestionServiceImpl implements ClosedQuestionService {
 
     @Override
     @Transactional
-    public ClosedQuestion updateClosedQuestionById(ClosedQuestion closedQuestion) {
+    public ClosedQuestion updateClosedQuestion(ClosedQuestion closedQuestion) {
         if (Objects.isNull(closedQuestion) || closedQuestion.id() == null) {
             String errorMessage = INVALID_ARGUMENT_MESSAGE + "ClosedQuestion or ID cannot be null";
             logger.error(errorMessage);
@@ -99,8 +99,28 @@ public class ClosedQuestionServiceImpl implements ClosedQuestionService {
         }
 
         logger.info("Updating closed question with id {}", closedQuestion.id());
-        ClosedQuestion updated = repository.updateClosedQuestionById(closedQuestion);
+        ClosedQuestion updated = repository.updateClosedQuestion(closedQuestion);
         logger.info("Updated closed question with id {}", updated.id());
         return updated;
+    }
+
+    @Override
+    @Transactional
+    public ClosedQuestion deleteClosedQuestion(Integer closedQuestionId, String userId) {
+        if (Objects.isNull(closedQuestionId)) {
+            String errorMessage = INVALID_ARGUMENT_MESSAGE + "ClosedQuestion ID cannot be null";
+            logger.error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
+        }
+        if (Objects.isNull(userId)) {
+            String errorMessage = INVALID_ARGUMENT_MESSAGE + USER_ID_CANNOT_BE_NULL_MESSAGE;
+            logger.error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        logger.info("Deleting closed question with id {} for user {}", closedQuestionId, userId);
+        ClosedQuestion deleted = repository.deleteClosedQuestion(closedQuestionId);
+        logger.info("Deleted closed question with id {}", deleted.id());
+        return deleted;
     }
 }

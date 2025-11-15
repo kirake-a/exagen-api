@@ -15,5 +15,7 @@ public interface ClosedQuestionService {
 
     ClosedQuestion createClosedQuestion(ClosedQuestion test);
 
-    ClosedQuestion updateClosedQuestionById(ClosedQuestion closedQuestion);
+    ClosedQuestion updateClosedQuestion(ClosedQuestion closedQuestion);
+
+    ClosedQuestion deleteClosedQuestion(Integer closedQuestionId, String userId);
 }

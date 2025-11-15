@@ -16,4 +16,6 @@ public interface OpenQuestionService {
     OpenQuestion createOpenQuestion(OpenQuestion test);
 
     OpenQuestion updateOpenQuestion(OpenQuestion openQuestion);
+
+    OpenQuestion deleteOpenQuestion(Integer openQuestionId, String userId);
 }

@@ -64,7 +64,11 @@ public class TestServiceImpl implements TestService {
     @Override
     @Transactional
     public Test createTest(Test test) {
-        return null;
+        logger.info("Creating new test");
+        Test createdTest = this.repository.createTest(test);
+        logger.info("Created test with id {}", createdTest.id());
+
+        return createdTest;
     }
 
     @Override
@@ -92,5 +96,26 @@ public class TestServiceImpl implements TestService {
         logger.info("Deleted test with id {}", testId);
 
         return deletedTest;
+    }
+
+    @Override
+    @Transactional
+    public Test updateTest(String testId, Test updatedTest) {
+        if (Objects.isNull(testId)) {
+            String errorMessage = INVALID_ARGUMENT_MESSAGE + TEST_ID_CANNOT_BE_NULL_MESSAGE;
+            logger.error(errorMessage);
+            throw new IllegalArgumentException(errorMessage);
+        }
+
+        if (!this.repository.getTestById(testId).isPresent()) {
+            String errorMessage = "Test with id " + testId + " not found";
+            logger.error(errorMessage);
+            throw new ResourceNotFoundException(errorMessage);
+        }
+
+        Test test = this.repository.updateTest(testId, updatedTest);
+        logger.info("Updated test with id {}", testId);
+
+        return test;
     }
 }

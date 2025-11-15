@@ -56,9 +56,20 @@ public class ClosedQuestionRepositoryImpl implements ClosedQuestionRepository {
     }
 
     @Override
-    public ClosedQuestion updateClosedQuestionById(ClosedQuestion closedQuestion) {
+    public ClosedQuestion updateClosedQuestion(ClosedQuestion closedQuestion) {
         ClosedQuestionSchema schema = ClosedQuestionMapper.toSchema(closedQuestion);
         ClosedQuestionSchema updated = jpaRepository.save(schema);
         return ClosedQuestionMapper.toModel(updated);
+    }
+
+    @Override
+    public ClosedQuestion deleteClosedQuestion(Integer id) {
+        Optional<ClosedQuestionSchema> schemaOpt = jpaRepository.findById(id);
+        if (schemaOpt.isPresent()) {
+            ClosedQuestionSchema schema = schemaOpt.get();
+            jpaRepository.delete(schema);
+            return ClosedQuestionMapper.toModel(schema);
+        }
+        return null;
     }
 }

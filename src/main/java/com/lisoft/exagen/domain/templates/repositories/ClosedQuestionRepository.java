@@ -16,5 +16,7 @@ public interface ClosedQuestionRepository {
 
     ClosedQuestion createClosedQuestion(ClosedQuestion closedQuestion);
 
-    ClosedQuestion updateClosedQuestionById(ClosedQuestion closedQuestion);
+    ClosedQuestion updateClosedQuestion(ClosedQuestion closedQuestion);
+
+    ClosedQuestion deleteClosedQuestion(Integer id);
 }
