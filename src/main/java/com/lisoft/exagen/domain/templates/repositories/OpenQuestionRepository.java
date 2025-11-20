@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OpenQuestionRepository {
+    List<OpenQuestion> getAllOpenQuestions();
+
     List<OpenQuestion> getAllOpenQuestionsByUserId(String userId);
 
     List<OpenQuestion> getAllOpenQuestionsByCategoryId(Integer categoryId);
@@ -15,4 +17,6 @@ public interface OpenQuestionRepository {
     OpenQuestion createOpenQuestion(OpenQuestion openQuestion);
 
     OpenQuestion updateOpenQuestion(OpenQuestion openQuestion);
+
+    OpenQuestion deleteOpenQuestion(Integer id);
 }

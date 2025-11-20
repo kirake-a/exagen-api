@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClosedQuestionRepository {
+    List<ClosedQuestion> getAllClosedQuestions();
+
     List<ClosedQuestion> getAllClosedQuestionsByUserId(String userId);
 
     List<ClosedQuestion> getAllClosedQuestionsByCategoryId(Integer categoryId);
@@ -14,5 +16,7 @@ public interface ClosedQuestionRepository {
 
     ClosedQuestion createClosedQuestion(ClosedQuestion closedQuestion);
 
-    ClosedQuestion updateClosedQuestionById(ClosedQuestion closedQuestion);
+    ClosedQuestion updateClosedQuestion(ClosedQuestion closedQuestion);
+
+    ClosedQuestion deleteClosedQuestion(Integer id);
 }

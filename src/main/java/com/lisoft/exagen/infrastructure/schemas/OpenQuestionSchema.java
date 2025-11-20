@@ -27,6 +27,7 @@ public class OpenQuestionSchema {
     private UserReference user;
 
     @ManyToMany(mappedBy = "openQuestions", fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<TestSchema> tests = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
