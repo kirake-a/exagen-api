@@ -2,6 +2,7 @@ package com.lisoft.exagen.infrastructure.repositories.impl;
 
 import com.lisoft.exagen.domain.templates.repositories.ClosedQuestionRepository;
 import com.lisoft.exagen.domain.models.ClosedQuestion;
+import com.lisoft.exagen.infrastructure.mappers.ClosedQuestionMapper;
 import com.lisoft.exagen.infrastructure.repositories.jpa.ClosedQuestionJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,10 +11,10 @@ import java.util.Optional;
 
 @Repository
 public class ClosedQuestionRepositoryImpl implements ClosedQuestionRepository {
-    private final ClosedQuestionJpaRepository jpRepository;
+    private final ClosedQuestionJpaRepository jpaRepository;
 
-    public ClosedQuestionRepositoryImpl(ClosedQuestionJpaRepository jpRepository) {
-        this.jpRepository = jpRepository;
+    public ClosedQuestionRepositoryImpl(ClosedQuestionJpaRepository jpaRepository) {
+        this.jpaRepository = jpaRepository;
     }
 
     @Override
@@ -23,7 +24,10 @@ public class ClosedQuestionRepositoryImpl implements ClosedQuestionRepository {
 
     @Override
     public List<ClosedQuestion> getAllClosedQuestionsByCategoryId(Integer categoryId) {
-        return List.of();
+        return jpaRepository.findByCategoryId(categoryId)
+                .stream()
+                .map(ClosedQuestionMapper::toModel)
+                .toList();
     }
 
     @Override
