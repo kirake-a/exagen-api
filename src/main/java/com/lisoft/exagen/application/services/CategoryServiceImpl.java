@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -69,8 +68,8 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = this.categoryRepository.findByIdAndUserIdUserId(categoryId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found or access denied"));
 
-        List<ClosedQuestion> closedQuestions = new ArrayList<>();
-        List<OpenQuestion> openQuestions = new ArrayList<>();
+        List<ClosedQuestion> closedQuestions = List.of();
+        List<OpenQuestion> openQuestions = List.of();
 
         boolean includeClosed = type == null || type ==  QuestionTypeEnum.CLOSED;
         boolean includeOpen = type == null || type == QuestionTypeEnum.OPEN;
