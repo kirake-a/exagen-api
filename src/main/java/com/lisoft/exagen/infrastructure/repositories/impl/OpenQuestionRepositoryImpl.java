@@ -2,6 +2,7 @@ package com.lisoft.exagen.infrastructure.repositories.impl;
 
 import com.lisoft.exagen.domain.templates.repositories.OpenQuestionRepository;
 import com.lisoft.exagen.domain.models.OpenQuestion;
+import com.lisoft.exagen.infrastructure.mappers.OpenQuestionMapper;
 import com.lisoft.exagen.infrastructure.repositories.jpa.OpenQuestionJpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +24,10 @@ public class OpenQuestionRepositoryImpl implements OpenQuestionRepository {
 
     @Override
     public List<OpenQuestion> getAllOpenQuestionsByCategoryId(Integer categoryId) {
-        return List.of();
+        return jpaRepository.findByCategoryId(categoryId)
+                .stream()
+                .map(OpenQuestionMapper::toModel)
+                .toList();
     }
 
     @Override

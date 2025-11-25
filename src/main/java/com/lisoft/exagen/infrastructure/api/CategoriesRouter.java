@@ -1,0 +1,119 @@
+package com.lisoft.exagen.infrastructure.api;
+
+import com.lisoft.exagen.application.dtos.CategoryResponseDto;
+import com.lisoft.exagen.application.dtos.QuestionsCategoryResponseDto;
+import com.lisoft.exagen.application.dtos.ResponseWrapper;
+import com.lisoft.exagen.application.dtos.TestQuestionsDto;
+import com.lisoft.exagen.domain.enums.QuestionTypeEnum;
+import com.lisoft.exagen.domain.models.Category;
+import com.lisoft.exagen.domain.templates.services.CategoryService;
+import com.lisoft.exagen.infrastructure.mappers.CategoryMapper;
+import com.lisoft.exagen.infrastructure.utils.JwtManager;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static com.lisoft.exagen.domain.utils.Constants.API_VERSION;
+
+@RestController
+@RequestMapping(API_VERSION + "/categories")
+@SecurityRequirement(name = "bearerAuth")
+public class CategoriesRouter {
+    private final CategoryService categoryService;
+
+    public CategoriesRouter(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
+    @GetMapping("/")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ResponseWrapper<List<CategoryResponseDto>>> getAllCategoriesByUserId(
+            Authentication authentication
+    ) {
+        String userId = JwtManager.getUserId(authentication);
+
+        List<Category> categories = categoryService.getAllCategoriesByUserId(userId);
+
+        List<CategoryResponseDto> response = categories.stream()
+                .map(CategoryMapper::toCategoryResponseDto)
+                .toList();
+
+        return new ResponseEntity<>(
+                new ResponseWrapper<>(
+                        true,
+                        "Welcome user " + userId,
+                        response
+                ),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/{categoryId}/questions")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ResponseWrapper<QuestionsCategoryResponseDto>> getAllQuestionsByCategoryId(
+            @PathVariable Integer categoryId,
+            Authentication authentication,
+            @RequestParam(required = false) QuestionTypeEnum type
+    ) {
+        String userId = JwtManager.getUserId(authentication);
+
+        TestQuestionsDto questions = categoryService.getQuestions(categoryId, userId, type);
+
+        return new ResponseEntity<>(
+                new ResponseWrapper<>(
+                        true,
+                        "Welcome user " + userId,
+                        new QuestionsCategoryResponseDto(
+                                categoryId,
+                                userId,
+                                questions
+                        )
+                ),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<ResponseWrapper<CategoryResponseDto>> createCategory(
+            @Valid @RequestParam String name,
+            Authentication authentication
+    ) {
+        String userId = JwtManager.getUserId(authentication);
+
+        Category createdCategory = categoryService.create(name, userId);
+
+        return new ResponseEntity<>(
+                new ResponseWrapper<>(
+                        true,
+                        "",
+                        CategoryMapper.toCategoryResponseDto(createdCategory)
+                ),
+                HttpStatus.CREATED
+        );
+    }
+
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<ResponseWrapper<Integer>> deleteCategory(
+            @PathVariable Integer categoryId,
+            Authentication authentication
+    ) {
+        String userId = JwtManager.getUserId(authentication);
+
+        Category deletedCategory = categoryService.delete(categoryId, userId);
+
+        return new ResponseEntity<>(
+                new ResponseWrapper<>(
+                        true,
+                        "Category deleted successfully",
+                        deletedCategory.id()
+                ),
+                HttpStatus.OK
+        );
+    }
+}
