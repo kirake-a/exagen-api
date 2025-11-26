@@ -12,6 +12,8 @@ public interface TestReposity {
 
     Optional<Test> getTestById(String id);
 
+    List<Test> getAllTestsByCategoryId(Integer categoryId);
+
     Test createTest(Test test);
 
     Test deleteTest(String id);

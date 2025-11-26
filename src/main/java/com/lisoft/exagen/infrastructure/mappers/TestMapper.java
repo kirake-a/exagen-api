@@ -91,6 +91,8 @@ public class TestMapper {
                         test.title(),
                         test.userId(),
                         test.openQuestionIds(),
-                        test.closedQuestionIds());
+                        test.closedQuestionIds(),
+                        test.categoryId()
+        );
     }
 }

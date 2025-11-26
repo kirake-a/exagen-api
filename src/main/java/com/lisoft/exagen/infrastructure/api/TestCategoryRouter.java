@@ -3,6 +3,11 @@ package com.lisoft.exagen.infrastructure.api;
 import com.lisoft.exagen.application.dtos.ResponseWrapper;
 import com.lisoft.exagen.application.dtos.TestCategoryResponseDto;
 import com.lisoft.exagen.application.dtos.TestResponseDto;
+import com.lisoft.exagen.domain.models.Test;
+import com.lisoft.exagen.domain.models.TestCategory;
+import com.lisoft.exagen.domain.templates.services.TestCategoryService;
+import com.lisoft.exagen.infrastructure.mappers.TestCategoryMapper;
+import com.lisoft.exagen.infrastructure.mappers.TestMapper;
 import com.lisoft.exagen.infrastructure.utils.JwtManager;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -20,19 +25,28 @@ import static com.lisoft.exagen.domain.utils.Constants.API_VERSION;
 @RequestMapping(API_VERSION + "/test-categories")
 @SecurityRequirement(name = "bearerAuth")
 public class TestCategoryRouter {
+    private final TestCategoryService testCategoryService;
+
+    public  TestCategoryRouter(TestCategoryService testCategoryService) {
+        this.testCategoryService = testCategoryService;
+    }
 
     @GetMapping("/")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ResponseWrapper<TestCategoryResponseDto>> getAllTestCategories(
+    public ResponseEntity<ResponseWrapper<List<TestCategoryResponseDto>>> getAllTestCategories(
             Authentication authentication
     ) {
         String userId = JwtManager.getUserId(authentication);
+
+        List<TestCategory> categories = this.testCategoryService.getAllTestCategoriesByUserId(userId);
 
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
                         "",
-                        null
+                        categories.stream()
+                                .map(TestCategoryMapper::toTestCategoryResponseDto)
+                                .toList()
                 ),
                 HttpStatus.OK
         );
@@ -41,16 +55,20 @@ public class TestCategoryRouter {
     @GetMapping("/{categoryId}/tests")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<List<TestResponseDto>>> getAllTestsByCategoryId(
-            @PathVariable String categoryId,
+            @PathVariable Integer categoryId,
             Authentication authentication
     ) {
         String userId = JwtManager.getUserId(authentication);
+
+        List<Test> tests = this.testCategoryService.getAllTestsByCategoryId(categoryId, userId);
 
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
                         "",
-                        null
+                        tests.stream()
+                                .map(TestMapper::toResponseDto)
+                                .toList()
                 ),
                 HttpStatus.OK
         );
@@ -64,13 +82,15 @@ public class TestCategoryRouter {
     ) {
         String userId = JwtManager.getUserId(authentication);
 
+        TestCategory category = this.testCategoryService.create(name, userId);
+
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
                         "",
-                        null
+                        TestCategoryMapper.toTestCategoryResponseDto(category)
                 ),
-                HttpStatus.OK
+                HttpStatus.CREATED
         );
     }
 }
