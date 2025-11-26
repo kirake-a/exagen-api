@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ClosedQuestionJpaRepository extends JpaRepository<ClosedQuestionSchema, Integer> {
     List<ClosedQuestionSchema> findByCategoryId(Integer categoryId);
+
+    List<ClosedQuestionSchema> findByUserUserId(String userId);
 }
