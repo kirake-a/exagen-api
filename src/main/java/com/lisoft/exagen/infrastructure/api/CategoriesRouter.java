@@ -80,6 +80,7 @@ public class CategoriesRouter {
     }
 
     @PostMapping("/")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<CategoryResponseDto>> createCategory(
             @Valid @RequestParam String name,
             Authentication authentication
@@ -99,6 +100,7 @@ public class CategoriesRouter {
     }
 
     @DeleteMapping("/{categoryId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ResponseWrapper<Integer>> deleteCategory(
             @PathVariable Integer categoryId,
             Authentication authentication
