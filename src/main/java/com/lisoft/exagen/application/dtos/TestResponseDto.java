@@ -7,5 +7,6 @@ public record TestResponseDto(
         String title,
         String userId,
         Set<Integer> openQuestionIds,
-        Set<Integer> closedQuestionIds
+        Set<Integer> closedQuestionIds,
+        Integer categoryId
 ) {}

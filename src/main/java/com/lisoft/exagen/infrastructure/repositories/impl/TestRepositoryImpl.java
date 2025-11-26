@@ -40,6 +40,14 @@ public class TestRepositoryImpl implements TestReposity {
     }
 
     @Override
+    public List<Test> getAllTestsByCategoryId(Integer categoryId) {
+        return this.jpaRepository.findByTestCategoryId(categoryId)
+                .stream()
+                .map(TestMapper::toModel)
+                .toList();
+    }
+
+    @Override
     public Test createTest(Test test) {
         return null;
     }

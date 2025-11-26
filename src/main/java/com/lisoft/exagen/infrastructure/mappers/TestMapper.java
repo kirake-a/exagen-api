@@ -2,10 +2,7 @@ package com.lisoft.exagen.infrastructure.mappers;
 
 import com.lisoft.exagen.application.dtos.TestResponseDto;
 import com.lisoft.exagen.domain.models.Test;
-import com.lisoft.exagen.infrastructure.schemas.ClosedQuestionSchema;
-import com.lisoft.exagen.infrastructure.schemas.OpenQuestionSchema;
-import com.lisoft.exagen.infrastructure.schemas.TestSchema;
-import com.lisoft.exagen.infrastructure.schemas.UserReference;
+import com.lisoft.exagen.infrastructure.schemas.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,12 +30,15 @@ public class TestMapper {
                         .collect(Collectors.toSet()) :
                 new HashSet<>();
 
+        Integer categoryId = schema.getTestCategory() != null ? schema.getTestCategory().getId() : null;
+
         return new Test(
                 schema.getId(),
                 schema.getTitle(),
                 userId,
                 openQuestions,
-                closedQuestions
+                closedQuestions,
+                categoryId
         );
     }
 
@@ -67,12 +67,21 @@ public class TestMapper {
                         .collect(Collectors.toSet()) :
                 new HashSet<>();
 
+        TestCategorySchema category = null;
+
+        if (test.categoryId() != null) {
+            category = TestCategorySchema.builder()
+                    .id(test.categoryId())
+                    .build();
+        }
+
         return new TestSchema(
                 test.id(),
                 test.title(),
                 userReference,
                 openQuestions,
-                closedQuestions
+                closedQuestions,
+                category
         );
     }
 
@@ -82,6 +91,8 @@ public class TestMapper {
                         test.title(),
                         test.userId(),
                         test.openQuestionIds(),
-                        test.closedQuestionIds());
+                        test.closedQuestionIds(),
+                        test.categoryId()
+        );
     }
 }

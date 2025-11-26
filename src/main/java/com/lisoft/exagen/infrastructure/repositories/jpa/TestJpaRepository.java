@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TestJpaRepository extends JpaRepository<TestSchema, String> {
     List<TestSchema> findByUserUserId(String userId);
+
+    List<TestSchema> findByTestCategoryId(Integer categoryId);
 }
