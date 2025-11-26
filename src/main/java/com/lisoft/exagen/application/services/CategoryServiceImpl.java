@@ -13,14 +13,13 @@ import com.lisoft.exagen.domain.templates.repositories.CategoryRepository;
 import com.lisoft.exagen.domain.templates.repositories.ClosedQuestionRepository;
 import com.lisoft.exagen.domain.templates.repositories.OpenQuestionRepository;
 import com.lisoft.exagen.domain.templates.services.CategoryService;
+import com.lisoft.exagen.domain.utils.DataValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-
-import static com.lisoft.exagen.domain.utils.Constants.USER_ID_CANNOT_BE_NULL_MESSAGE;
 
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
@@ -44,10 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> getAllCategoriesByUserId(String userId) {
         logger.info("Getting all categories by user id {}", userId);
 
-        if (Objects.isNull(userId) || userId.isEmpty()) {
-            logger.error(USER_ID_CANNOT_BE_NULL_MESSAGE);
-            throw new InvalidArgumentException(USER_ID_CANNOT_BE_NULL_MESSAGE);
-        }
+        DataValidator.validateUserId(userId);
 
         return this.categoryRepository.findAllByUserId(userId);
     }
@@ -60,10 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
            throw new InvalidArgumentException("Category Id can't be null");
         }
 
-        if (Objects.isNull(userId) || userId.isEmpty()) {
-            logger.error("userId can't be null or empty");
-            throw new InvalidArgumentException(USER_ID_CANNOT_BE_NULL_MESSAGE);
-        }
+        DataValidator.validateUserId(userId);
 
         Category category = this.categoryRepository.findByIdAndUserIdUserId(categoryId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found or access denied"));
@@ -114,11 +107,7 @@ public class CategoryServiceImpl implements CategoryService {
             throw new InvalidArgumentException(message);
         }
 
-        if (Objects.isNull(userId) || userId.isEmpty()) {
-            String message  = "User id is null or empty";
-            logger.error(message);
-            throw new InvalidArgumentException(message);
-        }
+        DataValidator.validateUserId(userId);
 
         return this.categoryRepository.save(new Category(
                 null,
@@ -134,10 +123,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category delete(Integer categoryId, String userId) {
         logger.info("Starting Category elimination: {}", categoryId);
 
-        if (Objects.isNull(userId) || userId.isEmpty()) {
-            logger.error("Invalid user id provided");
-            throw new InvalidArgumentException("Invalid user id provided");
-        }
+        DataValidator.validateUserId(userId);
 
         if (Objects.isNull(categoryId)) {
             logger.error("Invalid category id provided");

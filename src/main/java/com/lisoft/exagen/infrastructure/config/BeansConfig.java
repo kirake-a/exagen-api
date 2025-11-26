@@ -1,12 +1,12 @@
 package com.lisoft.exagen.infrastructure.config;
 
 import com.lisoft.exagen.application.services.CategoryServiceImpl;
+import com.lisoft.exagen.application.services.QuestionServiceImpl;
 import com.lisoft.exagen.application.services.TestServiceImpl;
 import com.lisoft.exagen.domain.templates.repositories.CategoryRepository;
 import com.lisoft.exagen.domain.templates.repositories.ClosedQuestionRepository;
 import com.lisoft.exagen.domain.templates.repositories.OpenQuestionRepository;
 import com.lisoft.exagen.domain.templates.repositories.TestReposity;
-import com.lisoft.exagen.domain.templates.services.CategoryService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,6 +27,19 @@ public class BeansConfig {
                 categoryRepository,
                 openQuestionRepository,
                 closedQuestionRepository
+        );
+    }
+
+    @Bean
+    QuestionServiceImpl questionService(
+            OpenQuestionRepository openQuestionRepository,
+            ClosedQuestionRepository closedQuestionRepository,
+            CategoryRepository categoryRepository
+    ) {
+        return new QuestionServiceImpl(
+                openQuestionRepository,
+                closedQuestionRepository,
+                categoryRepository
         );
     }
 }

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface OpenQuestionJpaRepository extends JpaRepository<OpenQuestionSchema, Integer> {
     List<OpenQuestionSchema> findByCategoryId(Integer categoryId);
+
+    List<OpenQuestionSchema> findByUserUserId(String userId);
 }
