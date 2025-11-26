@@ -15,4 +15,6 @@ public interface OpenQuestionRepository {
     OpenQuestion createOpenQuestion(OpenQuestion openQuestion);
 
     OpenQuestion updateOpenQuestion(OpenQuestion openQuestion);
+
+    void  deleteOpenQuestionById(Integer id);
 }
