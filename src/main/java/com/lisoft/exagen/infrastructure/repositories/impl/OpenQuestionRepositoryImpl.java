@@ -19,7 +19,10 @@ public class OpenQuestionRepositoryImpl implements OpenQuestionRepository {
 
     @Override
     public List<OpenQuestion> getAllOpenQuestionsByUserId(String userId) {
-        return List.of();
+        return this.jpaRepository.findByUserUserId(userId)
+                .stream()
+                .map(OpenQuestionMapper::toModel)
+                .toList();
     }
 
     @Override
@@ -32,16 +35,25 @@ public class OpenQuestionRepositoryImpl implements OpenQuestionRepository {
 
     @Override
     public Optional<OpenQuestion> getOpenQuestionById(Integer id) {
-        return null;
+        return this.jpaRepository.findById(id)
+                .map(OpenQuestionMapper::toModel);
     }
 
     @Override
     public OpenQuestion createOpenQuestion(OpenQuestion openQuestion) {
-        return null;
+        var entity = OpenQuestionMapper.toSchema(openQuestion);
+        var savedEntity = this.jpaRepository.save(entity);
+
+        return OpenQuestionMapper.toModel(savedEntity);
     }
 
     @Override
     public OpenQuestion updateOpenQuestion(OpenQuestion openQuestion) {
         return null;
+    }
+
+    @Override
+    public void deleteOpenQuestionById(Integer id) {
+        this.jpaRepository.deleteById(id);
     }
 }

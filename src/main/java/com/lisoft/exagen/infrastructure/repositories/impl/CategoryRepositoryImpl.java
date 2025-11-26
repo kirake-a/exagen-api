@@ -26,6 +26,12 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
+    public Optional<Category> getById(Integer id) {
+        return this.categoryJpaRepository.findById(id)
+                .map(CategoryMapper::toModel);
+    }
+
+    @Override
     public List<Category> findAllByUserId(String userId) {
         return this.categoryJpaRepository.findByUserIdUserId(userId)
                 .stream()

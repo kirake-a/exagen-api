@@ -19,7 +19,10 @@ public class ClosedQuestionRepositoryImpl implements ClosedQuestionRepository {
 
     @Override
     public List<ClosedQuestion> getAllClosedQuestionsByUserId(String userId) {
-        return List.of();
+        return this.jpaRepository.findByUserUserId(userId)
+                .stream()
+                .map(ClosedQuestionMapper::toModel)
+                .toList();
     }
 
     @Override
@@ -32,16 +35,25 @@ public class ClosedQuestionRepositoryImpl implements ClosedQuestionRepository {
 
     @Override
     public Optional<ClosedQuestion> getClosedQuestionById(Integer id) {
-        return null;
+        return this.jpaRepository.findById(id)
+                .map(ClosedQuestionMapper::toModel);
     }
 
     @Override
     public ClosedQuestion createClosedQuestion(ClosedQuestion closedQuestion) {
-        return null;
+        var entity = ClosedQuestionMapper.toSchema(closedQuestion);
+        var savedEntity = this.jpaRepository.save(entity);
+
+        return ClosedQuestionMapper.toModel(savedEntity);
     }
 
     @Override
     public ClosedQuestion updateClosedQuestionById(ClosedQuestion closedQuestion) {
         return null;
+    }
+
+    @Override
+    public void deleteClosedQuestionById(Integer id) {
+        this.jpaRepository.deleteById(id);
     }
 }
