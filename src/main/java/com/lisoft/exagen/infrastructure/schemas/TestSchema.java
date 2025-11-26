@@ -12,9 +12,11 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "test")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TestSchema {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @EqualsAndHashCode.Include
     private String id;
 
     @Column(name = "title", nullable = false, length = 100)
@@ -38,4 +40,8 @@ public class TestSchema {
             inverseJoinColumns = @JoinColumn(name = "closed_question_id")
     )
     private Set<ClosedQuestionSchema> closedQuestions = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private TestCategorySchema testCategory;
 }
