@@ -2,6 +2,7 @@ package com.lisoft.exagen.infrastructure.config;
 
 import com.lisoft.exagen.application.services.CategoryServiceImpl;
 import com.lisoft.exagen.application.services.QuestionServiceImpl;
+import com.lisoft.exagen.application.services.TestCategoryServiceImpl;
 import com.lisoft.exagen.application.services.TestServiceImpl;
 import com.lisoft.exagen.domain.templates.repositories.CategoryRepository;
 import com.lisoft.exagen.domain.templates.repositories.ClosedQuestionRepository;
@@ -41,5 +42,10 @@ public class BeansConfig {
                 closedQuestionRepository,
                 categoryRepository
         );
+    }
+
+    @Bean
+    TestCategoryServiceImpl testCategoryService() {
+        return new TestCategoryServiceImpl();
     }
 }
