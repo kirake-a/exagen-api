@@ -3,6 +3,7 @@ package com.lisoft.exagen.infrastructure.config;
 import com.lisoft.exagen.application.dtos.ResponseWrapper;
 import com.lisoft.exagen.domain.exceptions.InvalidArgumentException;
 import com.lisoft.exagen.domain.exceptions.ResourceNotFoundException;
+import com.lisoft.exagen.domain.exceptions.UnauthorizedAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,18 @@ public class GlobalExceptionHandler {
                         null
                 ),
                 HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ResponseWrapper<Object>> handleUnauthorizedAccessException(UnauthorizedAccessException exception) {
+        return new ResponseEntity<>(
+                new ResponseWrapper<>(
+                        false,
+                        exception.getMessage(),
+                        null
+                ),
+                HttpStatus.FORBIDDEN
         );
     }
 
