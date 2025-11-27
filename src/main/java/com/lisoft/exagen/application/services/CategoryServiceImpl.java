@@ -83,14 +83,16 @@ public class CategoryServiceImpl implements CategoryService {
                                 q.id(),
                                 q.statement(),
                                 q.options(),
-                                q.correctAnswer()
+                                q.correctAnswer(),
+                                q.categoryId()
                         ))
                         .toList(),
                 openQuestions.stream()
                         .map(q -> new OpenQuestionDto(
                                 q.id(),
                                 q.statement(),
-                                q.response()
+                                q.response(),
+                                q.categoryId()
                         ))
                         .toList()
         );
