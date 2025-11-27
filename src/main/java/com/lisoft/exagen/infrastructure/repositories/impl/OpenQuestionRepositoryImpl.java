@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class OpenQuestionRepositoryImpl implements OpenQuestionRepository {
@@ -55,5 +56,14 @@ public class OpenQuestionRepositoryImpl implements OpenQuestionRepository {
     @Override
     public void deleteOpenQuestionById(Integer id) {
         this.jpaRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean doQuestionsExist(Set<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return true;
+        }
+        long count = this.jpaRepository.countByIdIn(ids);
+        return count == ids.size();
     }
 }

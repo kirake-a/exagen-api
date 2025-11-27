@@ -1,19 +1,20 @@
 package com.lisoft.exagen.infrastructure.api;
 
+import com.lisoft.exagen.application.dtos.CreateTestRequestDto;
 import com.lisoft.exagen.application.dtos.ResponseWrapper;
 import com.lisoft.exagen.application.dtos.TestResponseDto;
 import com.lisoft.exagen.domain.models.Test;
 import com.lisoft.exagen.domain.templates.services.TestService;
 import com.lisoft.exagen.infrastructure.mappers.TestMapper;
+import com.lisoft.exagen.infrastructure.utils.JwtManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,10 +31,19 @@ public class TestRouter {
     }
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     @Operation(summary = "", description = "")
-    public ResponseEntity<ResponseWrapper<List<TestResponseDto>>> getAllTest() {
-        List<Test> tests = testService.getAllTests();
+    public ResponseEntity<ResponseWrapper<List<TestResponseDto>>> getAllTest(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Integer categoryId,
+            Authentication authentication
+    ) {
+        String userId = JwtManager.getUserId(authentication);
+        List<Test> tests = testService.getAllTests(
+                userId,
+                title,
+                categoryId
+        );
 
         List<TestResponseDto> response = tests.stream()
                 .map(TestMapper::toResponseDto)
@@ -80,6 +90,46 @@ public class TestRouter {
                         true,
                         "Successfully retrieved tests",
                         response
+                ),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping("/")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ResponseWrapper<TestResponseDto>> createTest(
+            @Valid @RequestBody CreateTestRequestDto testRequest,
+            Authentication authentication
+    ) {
+        String userId = JwtManager.getUserId(authentication);
+
+        Test createdTest = this.testService.createTest(
+                TestMapper.createTestRequestDto2Model(testRequest, userId)
+        );
+
+        return new ResponseEntity<>(
+                new ResponseWrapper<>(
+                        true,
+                        "",
+                        TestMapper.toResponseDto(createdTest)
+                ),
+                HttpStatus.CREATED
+        );
+    }
+
+    @DeleteMapping("/{testId}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ResponseWrapper<String>> deleteTest(
+            @PathVariable String testId,
+            Authentication authentication
+    ) {
+        String userId = JwtManager.getUserId(authentication);
+
+        return new ResponseEntity<>(
+                new ResponseWrapper<>(
+                        true,
+                        "",
+                        ""
                 ),
                 HttpStatus.OK
         );

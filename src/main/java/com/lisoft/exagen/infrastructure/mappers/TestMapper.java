@@ -1,5 +1,6 @@
 package com.lisoft.exagen.infrastructure.mappers;
 
+import com.lisoft.exagen.application.dtos.CreateTestRequestDto;
 import com.lisoft.exagen.application.dtos.TestResponseDto;
 import com.lisoft.exagen.domain.models.Test;
 import com.lisoft.exagen.infrastructure.schemas.*;
@@ -93,6 +94,19 @@ public class TestMapper {
                         test.openQuestionIds(),
                         test.closedQuestionIds(),
                         test.categoryId()
+        );
+    }
+
+    public static Test createTestRequestDto2Model(CreateTestRequestDto dto, String userId) {
+        if (dto == null) return null;
+
+        return new Test(
+                null,
+                dto.title(),
+                userId,
+                dto.openQuestionIds(),
+                dto.closedQuestionIds(),
+                dto.categoryId()
         );
     }
 }

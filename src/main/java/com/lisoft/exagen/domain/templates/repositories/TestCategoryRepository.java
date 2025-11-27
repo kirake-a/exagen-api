@@ -11,4 +11,6 @@ public interface TestCategoryRepository {
     List<TestCategory> findAllByUserId(String userId);
 
     Optional<TestCategory> findByIdAndUserUserId(Integer categoryId, String userId);
+
+    boolean existsByCategoryId(Integer categoryId);
 }

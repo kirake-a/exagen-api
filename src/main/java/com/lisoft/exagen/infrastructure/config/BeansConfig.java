@@ -11,8 +11,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BeansConfig {
     @Bean
-    TestServiceImpl testService(TestReposity testRepository) {
-        return new TestServiceImpl(testRepository);
+    TestServiceImpl testService(
+            TestReposity testRepository,
+            TestCategoryRepository testCategoryRepository,
+            OpenQuestionRepository openQuestionRepository,
+            ClosedQuestionRepository closedQuestionRepository
+    ) {
+        return new TestServiceImpl(
+                testRepository,
+                testCategoryRepository,
+                openQuestionRepository,
+                closedQuestionRepository
+        );
     }
 
     @Bean

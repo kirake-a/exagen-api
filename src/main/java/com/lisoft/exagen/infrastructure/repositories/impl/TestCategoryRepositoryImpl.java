@@ -40,4 +40,11 @@ public class TestCategoryRepositoryImpl implements TestCategoryRepository {
         return this.testCategoryJpaRepository.findByIdAndUserUserId(categoryId, userId)
                 .map(TestCategoryMapper::toModel);
     }
+
+    @Override
+    public boolean existsByCategoryId(Integer categoryId) {
+        if (categoryId == null) return false;
+
+        return this.testCategoryJpaRepository.existsById(categoryId);
+    }
 }

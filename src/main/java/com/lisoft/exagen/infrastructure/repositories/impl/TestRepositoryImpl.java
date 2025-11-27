@@ -4,6 +4,7 @@ import com.lisoft.exagen.domain.templates.repositories.TestReposity;
 import com.lisoft.exagen.domain.models.Test;
 import com.lisoft.exagen.infrastructure.mappers.TestMapper;
 import com.lisoft.exagen.infrastructure.repositories.jpa.TestJpaRepository;
+import com.lisoft.exagen.infrastructure.schemas.TestSchema;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -49,7 +50,9 @@ public class TestRepositoryImpl implements TestReposity {
 
     @Override
     public Test createTest(Test test) {
-        return null;
+        TestSchema createdTest = this.jpaRepository.save(TestMapper.toSchema(test));
+
+        return TestMapper.toModel(createdTest);
     }
 
     @Override
