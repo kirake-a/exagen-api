@@ -13,7 +13,7 @@ public interface TestService {
 
     List<Test> getAllTestsByUserId(String userId);
 
-    Test getTestById(String testId);
+    Test getTestById(String testId, String userId);
 
     Test createTest(Test test);
 
