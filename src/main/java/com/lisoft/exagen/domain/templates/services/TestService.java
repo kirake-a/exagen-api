@@ -5,7 +5,11 @@ import com.lisoft.exagen.domain.models.Test;
 import java.util.List;
 
 public interface TestService {
-    List<Test> getAllTests();
+    List<Test> getAllTests(
+            String userId,
+            String title,
+            Integer categoryId
+    );
 
     List<Test> getAllTestsByUserId(String userId);
 

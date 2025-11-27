@@ -2,11 +2,11 @@ package com.lisoft.exagen.application.services;
 
 import com.lisoft.exagen.domain.exceptions.ResourceNotFoundException;
 import com.lisoft.exagen.domain.models.Test;
+import com.lisoft.exagen.domain.templates.repositories.TestCategoryRepository;
 import com.lisoft.exagen.domain.templates.repositories.TestReposity;
 import com.lisoft.exagen.domain.templates.services.TestService;
-import static com.lisoft.exagen.domain.utils.Constants.INVALID_ARGUMENT_MESSAGE;
-import static com.lisoft.exagen.domain.utils.Constants.USER_ID_CANNOT_BE_NULL_MESSAGE;
-import static com.lisoft.exagen.domain.utils.Constants.TEST_ID_CANNOT_BE_NULL_MESSAGE;
+
+import com.lisoft.exagen.domain.utils.DataValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,20 +14,38 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
+import static com.lisoft.exagen.domain.utils.Constants.*;
+
 public class TestServiceImpl implements TestService {
     private final TestReposity repository;
+    private final TestCategoryRepository testCategoryRepository;
 
     private final Logger logger = LoggerFactory.getLogger(TestServiceImpl.class);
 
-    public TestServiceImpl(TestReposity repository) {
+    public TestServiceImpl(
+            TestReposity repository,
+            TestCategoryRepository testCategoryRepository
+    ) {
         this.repository = repository;
+        this.testCategoryRepository = testCategoryRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Test> getAllTests() {
+    public List<Test> getAllTests(
+            String userId,
+            String title,
+            Integer categoryId
+    ) {
+        DataValidator.validateUserId(userId);
+
         logger.info("Getting all tests");
-        return this.repository.getAllTests();
+        List<Test> tests = this.repository.getAllTestsByUserId(userId);
+
+        return tests.stream()
+                .filter(t -> title == null || t.title().equals(title))
+                .filter(q -> categoryId == null || q.categoryId().equals(categoryId))
+                .toList();
     }
 
     @Override
@@ -64,7 +82,12 @@ public class TestServiceImpl implements TestService {
     @Override
     @Transactional
     public Test createTest(Test test) {
-        return null;
+        if (!this.testCategoryRepository.existsByCategoryId(test.categoryId())) {
+            logger.error(CATEGORY_NOT_FOUND_MESSAGE);
+            throw new ResourceNotFoundException(CATEGORY_NOT_FOUND_MESSAGE);
+        }
+
+        return this.repository.createTest(test);
     }
 
     @Override
