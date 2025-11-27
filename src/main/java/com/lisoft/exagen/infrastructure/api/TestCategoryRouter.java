@@ -9,6 +9,7 @@ import com.lisoft.exagen.domain.templates.services.TestCategoryService;
 import com.lisoft.exagen.infrastructure.mappers.TestCategoryMapper;
 import com.lisoft.exagen.infrastructure.mappers.TestMapper;
 import com.lisoft.exagen.infrastructure.utils.JwtManager;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,10 @@ public class TestCategoryRouter {
 
     @GetMapping("/")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Get all test categories for the authenticated user",
+            description = "Allows an authenticated user to retrieve all test categories associated with their account"
+    )
     public ResponseEntity<ResponseWrapper<List<TestCategoryResponseDto>>> getAllTestCategories(
             Authentication authentication
     ) {
@@ -54,6 +59,10 @@ public class TestCategoryRouter {
 
     @GetMapping("/{categoryId}/tests")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Get all tests by category ID for the authenticated user",
+            description = "Allows an authenticated user to retrieve all tests associated with a specific test category"
+    )
     public ResponseEntity<ResponseWrapper<List<TestResponseDto>>> getAllTestsByCategoryId(
             @PathVariable Integer categoryId,
             Authentication authentication
@@ -76,6 +85,10 @@ public class TestCategoryRouter {
 
     @PostMapping("/")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Create a new test category for the authenticated user",
+            description = "Allows an authenticated user to create a new test category by providing the necessary data"
+    )
     public ResponseEntity<ResponseWrapper<TestCategoryResponseDto>> createTestCategory(
             @Valid @RequestParam String name,
             Authentication authentication
