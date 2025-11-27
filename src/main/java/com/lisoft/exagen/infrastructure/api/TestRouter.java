@@ -130,11 +130,13 @@ public class TestRouter {
     ) {
         String userId = JwtManager.getUserId(authentication);
 
+        Test deletedTest = this.testService.deleteTest(testId, userId);
+
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
-                        "",
-                        ""
+                        "Test with id " + testId + " was deleted successfully",
+                        deletedTest.id()
                 ),
                 HttpStatus.OK
         );

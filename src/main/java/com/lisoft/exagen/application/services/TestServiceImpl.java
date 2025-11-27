@@ -78,9 +78,8 @@ public class TestServiceImpl implements TestService {
         DataValidator.validateUserId(userId);
 
         if (Objects.isNull(testId)) {
-            String errorMessage = INVALID_ARGUMENT_MESSAGE + TEST_ID_CANNOT_BE_NULL_MESSAGE;
-            logger.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
+            logger.error(TEST_ID_CANNOT_BE_NULL_MESSAGE);
+            throw new IllegalArgumentException(TEST_ID_CANNOT_BE_NULL_MESSAGE);
         }
 
         logger.info("Getting test by id");
@@ -121,25 +120,17 @@ public class TestServiceImpl implements TestService {
     @Override
     @Transactional
     public Test deleteTest(String testId, String userId) {
-        if (Objects.isNull(userId)) {
-            String errorMessage = INVALID_ARGUMENT_MESSAGE + USER_ID_CANNOT_BE_NULL_MESSAGE;
-            logger.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
-        }
+        DataValidator.validateUserId(userId);
 
         if (Objects.isNull(testId)) {
-            String errorMessage = INVALID_ARGUMENT_MESSAGE + TEST_ID_CANNOT_BE_NULL_MESSAGE;
-            logger.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
+            logger.error(TEST_ID_CANNOT_BE_NULL_MESSAGE);
+            throw new IllegalArgumentException(TEST_ID_CANNOT_BE_NULL_MESSAGE);
         }
 
-        if (!this.repository.getTestById(testId).isPresent()) {
-            String errorMessage = "Test with id " + testId + " not found";
-            logger.error(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
-        }
+        Test deletedTest = this.repository.getTestById(testId)
+                .orElseThrow(() -> new ResourceNotFoundException(TEST_NOT_FOUND_MESSAGE));
 
-        Test deletedTest = this.repository.deleteTest(testId);
+        this.repository.deleteTest(testId);
         logger.info("Deleted test with id {}", testId);
 
         return deletedTest;

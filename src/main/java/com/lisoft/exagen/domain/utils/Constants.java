@@ -12,6 +12,7 @@ public class Constants {
     public static final String USER_ID_CANNOT_BE_NULL_MESSAGE = "User ID cannot be null";
     public static final String TEST_ID_CANNOT_BE_NULL_MESSAGE = "Test ID cannot be null";
     public static final String UNAUTHORIZED_ACCESS_TO_TEST = "You do not have access to this test";
+    public static final String TEST_NOT_FOUND_MESSAGE = "The test your looking for was not found";
 
     public static final String QUESTION_NOT_FOUND_MESSAGE = "Question not found";
     public static final String UNAUTHORIZED_ACCESS_2_QUESTION = "Maybe your not authorized to access this questions";

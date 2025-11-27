@@ -56,7 +56,7 @@ public class TestRepositoryImpl implements TestReposity {
     }
 
     @Override
-    public Test deleteTest(String id) {
-        return null;
+    public void deleteTest(String id) {
+        this.jpaRepository.deleteById(id);
     }
 }
