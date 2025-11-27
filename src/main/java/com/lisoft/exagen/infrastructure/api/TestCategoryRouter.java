@@ -11,6 +11,7 @@ import com.lisoft.exagen.infrastructure.mappers.TestMapper;
 import com.lisoft.exagen.infrastructure.utils.JwtManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import static com.lisoft.exagen.domain.utils.Constants.API_VERSION;
 @RestController
 @RequestMapping(API_VERSION + "/test-categories")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Test Categories", description = "Endpoints for managing test categories")
 public class TestCategoryRouter {
     private final TestCategoryService testCategoryService;
 

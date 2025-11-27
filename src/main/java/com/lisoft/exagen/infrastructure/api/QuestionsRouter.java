@@ -10,6 +10,7 @@ import com.lisoft.exagen.infrastructure.mappers.OpenQuestionMapper;
 import com.lisoft.exagen.infrastructure.utils.JwtManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import static com.lisoft.exagen.domain.utils.Constants.QUESTION_FOUND_SUCCESSFUL
 @RestController
 @RequestMapping(API_VERSION + "/questions")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Questions", description = "Endpoints for managing questions")
 public class QuestionsRouter {
     private final QuestionService questionService;
 
