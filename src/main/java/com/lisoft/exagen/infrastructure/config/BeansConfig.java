@@ -13,11 +13,15 @@ public class BeansConfig {
     @Bean
     TestServiceImpl testService(
             TestReposity testRepository,
-            TestCategoryRepository testCategoryRepository
+            TestCategoryRepository testCategoryRepository,
+            OpenQuestionRepository openQuestionRepository,
+            ClosedQuestionRepository closedQuestionRepository
     ) {
         return new TestServiceImpl(
                 testRepository,
-                testCategoryRepository
+                testCategoryRepository,
+                openQuestionRepository,
+                closedQuestionRepository
         );
     }
 

@@ -15,6 +15,9 @@ public class Constants {
     public static final String QUESTION_NOT_FOUND_MESSAGE = "Question not found";
     public static final String UNAUTHORIZED_ACCESS_2_QUESTION = "Maybe your not authorized to access this questions";
     public static final String QUESTION_FOUND_SUCCESSFULLY = "Your question was found successfully";
+    public static final String OPEN_QUESTIONS_NOT_FOUND_MESSAGE = "One or more open questions does not exist";
+    public static final String CLOSED_QUESTIONS_NOT_FOUND_MESSAGE = "One or more closed questions does not exist";
+    public static final String CANNOT_CREATE_EXAM_WITH_NO_QUESTIONS = "Look like you do not gave any questions";
 
     public static final String CATEGORY_NOT_FOUND_MESSAGE = "Category not found";
     public static final String UNAUTHORIZED_ACCESS_2_CATEGORY = "Maybe your not authorized to access this category";

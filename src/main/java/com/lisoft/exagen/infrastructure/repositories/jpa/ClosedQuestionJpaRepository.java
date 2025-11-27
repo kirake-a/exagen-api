@@ -11,4 +11,6 @@ public interface ClosedQuestionJpaRepository extends JpaRepository<ClosedQuestio
     List<ClosedQuestionSchema> findByCategoryId(Integer categoryId);
 
     List<ClosedQuestionSchema> findByUserUserId(String userId);
+
+    long countByIdIn(Iterable<Integer> ids);
 }

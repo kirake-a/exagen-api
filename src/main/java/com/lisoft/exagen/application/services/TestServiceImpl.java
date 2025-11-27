@@ -1,7 +1,10 @@
 package com.lisoft.exagen.application.services;
 
+import com.lisoft.exagen.domain.exceptions.InvalidArgumentException;
 import com.lisoft.exagen.domain.exceptions.ResourceNotFoundException;
 import com.lisoft.exagen.domain.models.Test;
+import com.lisoft.exagen.domain.templates.repositories.ClosedQuestionRepository;
+import com.lisoft.exagen.domain.templates.repositories.OpenQuestionRepository;
 import com.lisoft.exagen.domain.templates.repositories.TestCategoryRepository;
 import com.lisoft.exagen.domain.templates.repositories.TestReposity;
 import com.lisoft.exagen.domain.templates.services.TestService;
@@ -13,21 +16,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.lisoft.exagen.domain.utils.Constants.*;
 
 public class TestServiceImpl implements TestService {
     private final TestReposity repository;
     private final TestCategoryRepository testCategoryRepository;
+    private final OpenQuestionRepository openQuestionRepository;
+    private final ClosedQuestionRepository closedQuestionRepository;
 
     private final Logger logger = LoggerFactory.getLogger(TestServiceImpl.class);
 
     public TestServiceImpl(
             TestReposity repository,
-            TestCategoryRepository testCategoryRepository
+            TestCategoryRepository testCategoryRepository,
+            OpenQuestionRepository openQuestionRepository,
+            ClosedQuestionRepository closedQuestionRepository
     ) {
         this.repository = repository;
         this.testCategoryRepository = testCategoryRepository;
+        this.openQuestionRepository = openQuestionRepository;
+        this.closedQuestionRepository = closedQuestionRepository;
     }
 
     @Override
@@ -82,10 +92,19 @@ public class TestServiceImpl implements TestService {
     @Override
     @Transactional
     public Test createTest(Test test) {
+        DataValidator.validateUserId(test.userId());
+
         if (!this.testCategoryRepository.existsByCategoryId(test.categoryId())) {
             logger.error(CATEGORY_NOT_FOUND_MESSAGE);
             throw new ResourceNotFoundException(CATEGORY_NOT_FOUND_MESSAGE);
         }
+
+        if (test.openQuestionIds().isEmpty() && test.closedQuestionIds().isEmpty()) {
+            throw new InvalidArgumentException(CANNOT_CREATE_EXAM_WITH_NO_QUESTIONS);
+        }
+
+        validateOpenQuestions(test.openQuestionIds());
+        validateClosedQuestions(test.closedQuestionIds());
 
         return this.repository.createTest(test);
     }
@@ -115,5 +134,23 @@ public class TestServiceImpl implements TestService {
         logger.info("Deleted test with id {}", testId);
 
         return deletedTest;
+    }
+
+    private void validateOpenQuestions(Set<Integer> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            boolean allExist = this.openQuestionRepository.doQuestionsExist(ids);
+            if (!allExist) {
+                throw new ResourceNotFoundException(OPEN_QUESTIONS_NOT_FOUND_MESSAGE);
+            }
+        }
+    }
+
+    private void validateClosedQuestions(Set<Integer> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            boolean allExist = this.closedQuestionRepository.doQuestionsExist(ids);
+            if (!allExist) {
+                throw new ResourceNotFoundException(CLOSED_QUESTIONS_NOT_FOUND_MESSAGE);
+            }
+        }
     }
 }

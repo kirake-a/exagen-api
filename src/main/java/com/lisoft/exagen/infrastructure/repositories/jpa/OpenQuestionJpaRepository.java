@@ -9,4 +9,6 @@ public interface OpenQuestionJpaRepository extends JpaRepository<OpenQuestionSch
     List<OpenQuestionSchema> findByCategoryId(Integer categoryId);
 
     List<OpenQuestionSchema> findByUserUserId(String userId);
+
+    long countByIdIn(Iterable<Integer> ids);
 }
