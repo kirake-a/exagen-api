@@ -6,5 +6,6 @@ public record ClosedQuestionDto(
         Integer id,
         String statement,
         List<String> options,
-        String correctAnswer
+        String correctAnswer,
+        Integer categoryId
 ) {}

@@ -68,7 +68,8 @@ public class ClosedQuestionMapper {
                 model.id(),
                 model.statement(),
                 model.options(),
-                model.correctAnswer()
+                model.correctAnswer(),
+                model.categoryId()
         );
     }
 

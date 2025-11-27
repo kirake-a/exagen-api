@@ -47,7 +47,8 @@ public class OpenQuestionMapper {
         return new OpenQuestionDto(
                 model.id(),
                 model.statement(),
-                model.response()
+                model.response(),
+                model.categoryId()
         );
     }
 
