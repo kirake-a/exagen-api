@@ -8,7 +8,9 @@ import com.lisoft.exagen.domain.templates.services.QuestionService;
 import com.lisoft.exagen.infrastructure.mappers.ClosedQuestionMapper;
 import com.lisoft.exagen.infrastructure.mappers.OpenQuestionMapper;
 import com.lisoft.exagen.infrastructure.utils.JwtManager;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import static com.lisoft.exagen.domain.utils.Constants.QUESTION_FOUND_SUCCESSFUL
 @RestController
 @RequestMapping(API_VERSION + "/questions")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Questions", description = "Endpoints for managing questions")
 public class QuestionsRouter {
     private final QuestionService questionService;
 
@@ -32,6 +35,10 @@ public class QuestionsRouter {
 
     @GetMapping("/")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Get all user's questions",
+            description = "Allows an authenticated user to retrieve questions based on various optional filters such as statement, category, amount, and type"
+    )
     public ResponseEntity<ResponseWrapper<TestQuestionsDto>> getQuestions(
             @RequestParam(required = false) String statement,
             @RequestParam(required = false) Integer categoryId,
@@ -61,6 +68,10 @@ public class QuestionsRouter {
 
     @GetMapping("/open/{questionId}")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Get an open question by ID",
+            description = "Allows an authenticated user to retrieve an open question by its ID"
+    )
     public ResponseEntity<ResponseWrapper<OpenQuestionDto>> getOpenQuestionById(
             @NotNull @PathVariable Integer questionId,
             Authentication authentication
@@ -81,6 +92,10 @@ public class QuestionsRouter {
 
     @GetMapping("/closed/{questionId}")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Get a closed question by ID",
+            description = "Allows an authenticated user to retrieve a closed question by its ID"
+    )
     public ResponseEntity<ResponseWrapper<ClosedQuestionDto>> getClosedQuestionById(
             @PathVariable Integer questionId,
             Authentication authentication
@@ -101,6 +116,10 @@ public class QuestionsRouter {
 
     @PostMapping("/")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Create new questions",
+            description = "Allows an authenticated user to create new questions by providing the necessary data"
+    )
     public ResponseEntity<ResponseWrapper<String>> createQuestions(
             @Valid @RequestBody CreateQuestionsDto data,
             Authentication authentication
@@ -125,6 +144,10 @@ public class QuestionsRouter {
 
     @DeleteMapping("/{questionId}")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Delete a question by ID",
+            description = "Allows an authenticated user to delete a question by its ID and type"
+    )
     public ResponseEntity<ResponseWrapper<String>> deleteQuestionById(
             @PathVariable Integer questionId,
             @RequestParam QuestionTypeEnum type,
