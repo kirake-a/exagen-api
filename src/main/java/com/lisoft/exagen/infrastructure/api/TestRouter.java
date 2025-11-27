@@ -9,6 +9,7 @@ import com.lisoft.exagen.infrastructure.mappers.TestMapper;
 import com.lisoft.exagen.infrastructure.utils.JwtManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import static com.lisoft.exagen.domain.utils.Constants.API_VERSION;
 @RestController
 @RequestMapping(API_VERSION + "/tests")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Tests", description = "Endpoints for managing tests")
 public class TestRouter {
     private final TestService testService;
 
@@ -32,7 +34,10 @@ public class TestRouter {
 
     @GetMapping("/")
     @PreAuthorize("isAuthenticated()")
-    @Operation(summary = "", description = "")
+    @Operation(
+            summary = "Get all tests for the authenticated user",
+            description = "Allows an authenticated user to retrieve all tests with optional filters such as title and category ID"
+    )
     public ResponseEntity<ResponseWrapper<List<TestResponseDto>>> getAllTest(
             @RequestParam(required = false) String title,
             @RequestParam(required = false) Integer categoryId,
@@ -61,7 +66,10 @@ public class TestRouter {
 
     @GetMapping("/{testId}")
     @PreAuthorize("isAuthenticated()")
-    @Operation(summary = "", description = "")
+    @Operation(
+            summary = "Get a test by its ID for the authenticated user",
+            description = "Allows an authenticated user to retrieve a specific test by providing its ID"
+    )
     public ResponseEntity<ResponseWrapper<TestResponseDto>> getTestById(
             @PathVariable String testId,
             Authentication authentication
@@ -82,7 +90,10 @@ public class TestRouter {
 
     @GetMapping("/user/{userId}")
     @PreAuthorize("isAuthenticated()")
-    @Operation(summary = "", description = "")
+    @Operation(
+            summary = "Get all tests by user ID for the authenticated user",
+            description = "Allows an authenticated user to retrieve all tests associated with a specific user"
+    )
     public ResponseEntity<ResponseWrapper<List<TestResponseDto>>> getTestByUserId(@PathVariable String userId) {
         List<Test> testsPreview = testService.getAllTestsByUserId(userId);
 
@@ -102,6 +113,10 @@ public class TestRouter {
 
     @PostMapping("/")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Create a new test for the authenticated user",
+            description = "Allows an authenticated user to create a new test by providing the necessary data"
+    )
     public ResponseEntity<ResponseWrapper<TestResponseDto>> createTest(
             @Valid @RequestBody CreateTestRequestDto testRequest,
             Authentication authentication
@@ -124,6 +139,10 @@ public class TestRouter {
 
     @DeleteMapping("/{testId}")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Delete a test by its ID for the authenticated user",
+            description = "Allows an authenticated user to delete a specific test by providing its ID"
+    )
     public ResponseEntity<ResponseWrapper<String>> deleteTest(
             @PathVariable String testId,
             Authentication authentication

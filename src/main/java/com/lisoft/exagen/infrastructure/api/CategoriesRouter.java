@@ -9,7 +9,10 @@ import com.lisoft.exagen.domain.models.Category;
 import com.lisoft.exagen.domain.templates.services.CategoryService;
 import com.lisoft.exagen.infrastructure.mappers.CategoryMapper;
 import com.lisoft.exagen.infrastructure.utils.JwtManager;
+
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,7 @@ import static com.lisoft.exagen.domain.utils.Constants.API_VERSION;
 @RestController
 @RequestMapping(API_VERSION + "/categories")
 @SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Categories", description = "Endpoints for managing categories")
 public class CategoriesRouter {
     private final CategoryService categoryService;
 
@@ -33,6 +37,10 @@ public class CategoriesRouter {
 
     @GetMapping("/")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+        summary = "Get all categories by user ID",
+        description = "Gets all categories associated with the authenticated user"
+    )
     public ResponseEntity<ResponseWrapper<List<CategoryResponseDto>>> getAllCategoriesByUserId(
             Authentication authentication
     ) {
@@ -56,6 +64,10 @@ public class CategoriesRouter {
 
     @GetMapping("/{categoryId}/questions")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Get all questions by category ID",
+            description = "Allows an authenticated user to retrieve all questions for a specific category, with an optional filter by question type"
+    )
     public ResponseEntity<ResponseWrapper<QuestionsCategoryResponseDto>> getAllQuestionsByCategoryId(
             @PathVariable Integer categoryId,
             Authentication authentication,
@@ -81,6 +93,10 @@ public class CategoriesRouter {
 
     @PostMapping("/")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Create a new category",
+            description = "Allows an authenticated user to create a new category by providing a name"
+    )
     public ResponseEntity<ResponseWrapper<CategoryResponseDto>> createCategory(
             @Valid @RequestParam String name,
             Authentication authentication
@@ -101,6 +117,10 @@ public class CategoriesRouter {
 
     @DeleteMapping("/{categoryId}")
     @PreAuthorize("isAuthenticated()")
+    @Operation(
+            summary = "Delete a category by ID",
+            description = "Allows an authenticated user to delete a category by its ID"
+    )
     public ResponseEntity<ResponseWrapper<Integer>> deleteCategory(
             @PathVariable Integer categoryId,
             Authentication authentication
