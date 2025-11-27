@@ -1,6 +1,5 @@
 package com.lisoft.exagen.application.services;
 
-import com.lisoft.exagen.application.dtos.TestResponseDto;
 import com.lisoft.exagen.domain.exceptions.ResourceNotFoundException;
 import com.lisoft.exagen.domain.models.Test;
 import com.lisoft.exagen.domain.models.TestCategory;

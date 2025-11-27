@@ -5,7 +5,6 @@ import com.lisoft.exagen.domain.exceptions.UnauthorizedAccessException;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import static com.lisoft.exagen.domain.utils.Constants.USER_ID_CANNOT_BE_NULL_MESSAGE;
 
