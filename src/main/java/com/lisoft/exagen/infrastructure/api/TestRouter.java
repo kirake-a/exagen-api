@@ -62,8 +62,13 @@ public class TestRouter {
     @GetMapping("/{testId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "", description = "")
-    public ResponseEntity<ResponseWrapper<TestResponseDto>> getTestById(@PathVariable String testId) {
-        Test test = testService.getTestById(testId);
+    public ResponseEntity<ResponseWrapper<TestResponseDto>> getTestById(
+            @PathVariable String testId,
+            Authentication authentication
+    ) {
+        String userId = JwtManager.getUserId(authentication);
+
+        Test test = testService.getTestById(testId, userId);
 
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
@@ -125,11 +130,13 @@ public class TestRouter {
     ) {
         String userId = JwtManager.getUserId(authentication);
 
+        Test deletedTest = this.testService.deleteTest(testId, userId);
+
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
-                        "",
-                        ""
+                        "Test with id " + testId + " was deleted successfully",
+                        deletedTest.id()
                 ),
                 HttpStatus.OK
         );

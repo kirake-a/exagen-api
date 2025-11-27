@@ -16,5 +16,5 @@ public interface TestReposity {
 
     Test createTest(Test test);
 
-    Test deleteTest(String id);
+    void deleteTest(String id);
 }

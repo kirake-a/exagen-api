@@ -2,6 +2,7 @@ package com.lisoft.exagen.application.services;
 
 import com.lisoft.exagen.domain.exceptions.InvalidArgumentException;
 import com.lisoft.exagen.domain.exceptions.ResourceNotFoundException;
+import com.lisoft.exagen.domain.exceptions.UnauthorizedAccessException;
 import com.lisoft.exagen.domain.models.Test;
 import com.lisoft.exagen.domain.templates.repositories.ClosedQuestionRepository;
 import com.lisoft.exagen.domain.templates.repositories.OpenQuestionRepository;
@@ -73,20 +74,27 @@ public class TestServiceImpl implements TestService {
 
     @Override
     @Transactional(readOnly = true)
-    public Test getTestById(String testId) {
+    public Test getTestById(String testId, String userId) {
+        DataValidator.validateUserId(userId);
+
         if (Objects.isNull(testId)) {
-            String errorMessage = INVALID_ARGUMENT_MESSAGE + TEST_ID_CANNOT_BE_NULL_MESSAGE;
-            logger.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
+            logger.error(TEST_ID_CANNOT_BE_NULL_MESSAGE);
+            throw new IllegalArgumentException(TEST_ID_CANNOT_BE_NULL_MESSAGE);
         }
 
         logger.info("Getting test by id");
-        return this.repository.getTestById(testId)
+        Test testGetted =  this.repository.getTestById(testId)
                 .orElseThrow(() -> {
                     String errorMessage = "Test with id " + testId + " not found";
                     logger.error(errorMessage);
                     return new ResourceNotFoundException(errorMessage);
                 });
+
+        if (!testGetted.userId().equals(userId)) {
+            throw new UnauthorizedAccessException(UNAUTHORIZED_ACCESS_TO_TEST);
+        }
+
+        return testGetted;
     }
 
     @Override
@@ -112,25 +120,17 @@ public class TestServiceImpl implements TestService {
     @Override
     @Transactional
     public Test deleteTest(String testId, String userId) {
-        if (Objects.isNull(userId)) {
-            String errorMessage = INVALID_ARGUMENT_MESSAGE + USER_ID_CANNOT_BE_NULL_MESSAGE;
-            logger.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
-        }
+        DataValidator.validateUserId(userId);
 
         if (Objects.isNull(testId)) {
-            String errorMessage = INVALID_ARGUMENT_MESSAGE + TEST_ID_CANNOT_BE_NULL_MESSAGE;
-            logger.error(errorMessage);
-            throw new IllegalArgumentException(errorMessage);
+            logger.error(TEST_ID_CANNOT_BE_NULL_MESSAGE);
+            throw new IllegalArgumentException(TEST_ID_CANNOT_BE_NULL_MESSAGE);
         }
 
-        if (!this.repository.getTestById(testId).isPresent()) {
-            String errorMessage = "Test with id " + testId + " not found";
-            logger.error(errorMessage);
-            throw new ResourceNotFoundException(errorMessage);
-        }
+        Test deletedTest = this.repository.getTestById(testId)
+                .orElseThrow(() -> new ResourceNotFoundException(TEST_NOT_FOUND_MESSAGE));
 
-        Test deletedTest = this.repository.deleteTest(testId);
+        this.repository.deleteTest(testId);
         logger.info("Deleted test with id {}", testId);
 
         return deletedTest;
