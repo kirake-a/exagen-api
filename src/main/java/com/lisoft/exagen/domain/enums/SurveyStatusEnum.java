@@ -6,7 +6,7 @@ public enum SurveyStatusEnum {
     ACTIVE("ACTIVE"),
     INACTIVE("INACTIVE");
 
-    private String value;
+    private final String value;
 
     SurveyStatusEnum(String value) {
         this.value = value;
@@ -15,5 +15,17 @@ public enum SurveyStatusEnum {
     @JsonValue
     public String getValue() {
         return value;
+    }
+
+    public static SurveyStatusEnum fromValue(String text) {
+        if (text == null) return INACTIVE;
+
+        for (SurveyStatusEnum status : SurveyStatusEnum.values()) {
+            if (status.value.equalsIgnoreCase(text)) {
+                return status;
+            }
+        }
+
+        throw new IllegalArgumentException("Unknown status: " + text);
     }
 }

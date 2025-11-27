@@ -1,5 +1,6 @@
 package com.lisoft.exagen.infrastructure.api;
 
+import com.lisoft.exagen.application.dtos.CreateSurveyRequestDto;
 import com.lisoft.exagen.application.dtos.ResponseWrapper;
 import com.lisoft.exagen.application.dtos.SurveyResponseDto;
 import com.lisoft.exagen.application.dtos.SurveyResponsesResponseDto;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -99,6 +101,7 @@ public class PublicSurveyRouter {
             description = "Allows authenticated users to create a new survey."
     )
     public ResponseEntity<ResponseWrapper<SurveyResponseDto>> createSurvey(
+            @Valid @RequestBody CreateSurveyRequestDto data,
             Authentication authentication
     ) {
         String userId = JwtManager.getUserId(authentication);
