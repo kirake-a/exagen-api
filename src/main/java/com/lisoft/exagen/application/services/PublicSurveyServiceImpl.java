@@ -58,6 +58,14 @@ public class PublicSurveyServiceImpl implements PublicSurveyService {
     }
 
     @Override
+    public PublicSurvey getSurveyById(String surveyId) {
+        DataValidator.validateNoEmptyString("surveyId", surveyId);
+
+        return this.publicSurveyRepository.findSurveyId(surveyId)
+                .orElseThrow(() -> new ResourceNotFoundException(SURVEY_NOT_FOUND_MESSAGE));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<PublicSurveyResponse> getAllSurveyResponsesBySurveyId(String surveyId, String userId) {
         DataValidator.validateUserId(userId);
