@@ -1,9 +1,6 @@
 package com.lisoft.exagen.infrastructure.config;
 
-import com.lisoft.exagen.application.services.CategoryServiceImpl;
-import com.lisoft.exagen.application.services.QuestionServiceImpl;
-import com.lisoft.exagen.application.services.TestCategoryServiceImpl;
-import com.lisoft.exagen.application.services.TestServiceImpl;
+import com.lisoft.exagen.application.services.*;
 import com.lisoft.exagen.domain.templates.repositories.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,6 +56,17 @@ public class BeansConfig {
         return new TestCategoryServiceImpl(
                 testCategoryRepository,
                 testReposity
+        );
+    }
+
+    @Bean
+    PublicSurveyServiceImpl publicSurveyService(
+            PublicSurveyRepository publicSurveyRepository,
+            PublicSurveyResponseRepository publicSurveyResponseRepository
+    ) {
+        return new PublicSurveyServiceImpl(
+                publicSurveyRepository,
+                publicSurveyResponseRepository
         );
     }
 }
