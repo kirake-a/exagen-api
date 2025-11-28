@@ -108,6 +108,7 @@ public class PublicSurveyMapper {
         return new SurveyResponseDto(
                 model.id(),
                 model.title(),
+                model.status(),
                 model.totalResponses(),
                 model.closedQuestionsIds()
         );
