@@ -98,7 +98,7 @@ public class PublicSurveyMapper {
                 status,
                 userId,
                 0,
-                null,
+                requestDto.closedQuestionsIds(),
                 null
         );
     }
