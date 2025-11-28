@@ -1,9 +1,12 @@
 package com.lisoft.exagen.infrastructure.mappers;
 
+import com.lisoft.exagen.application.dtos.SaveSurveyResponsesDto;
 import com.lisoft.exagen.domain.models.PublicSurveyResponse;
 import com.lisoft.exagen.infrastructure.schemas.ClosedQuestionSchema;
 import com.lisoft.exagen.infrastructure.schemas.PublicSurveyResponseSchema;
 import com.lisoft.exagen.infrastructure.schemas.PublicSurveySchema;
+
+import java.time.LocalDateTime;
 
 public class PublicSurveyResponseMapper {
     public static PublicSurveyResponse toModel(PublicSurveyResponseSchema schema) {
@@ -36,6 +39,20 @@ public class PublicSurveyResponseMapper {
                 closedQuestion,
                 model.selectedAnswer(),
                 model.answeredAt()
+        );
+    }
+
+     public static PublicSurveyResponse saveSurveyResponse2Model(
+            SaveSurveyResponsesDto dto,
+            String surveyId,
+            LocalDateTime answeredAt
+    ) {
+        return new PublicSurveyResponse(
+                null,
+                surveyId,
+                dto.questionId(),
+                dto.selectedAnswer(),
+                answeredAt
         );
     }
 }

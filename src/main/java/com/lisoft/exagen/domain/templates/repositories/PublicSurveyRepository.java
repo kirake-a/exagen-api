@@ -13,5 +13,7 @@ public interface PublicSurveyRepository {
 
     PublicSurvey savePublicSurvey(PublicSurvey survey);
 
+    PublicSurvey updateTotalResponsesByOne(String surveyId);
+
     void deleteSurveyById(String surveyId);
 }
