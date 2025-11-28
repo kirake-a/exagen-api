@@ -64,18 +64,15 @@ public class PublicSurveyRouter {
     }
 
     @GetMapping("/{surveyId}")
-    @PreAuthorize("isAuthenticated()")
     @Operation(
             summary = "Get survey by ID",
-            description = "Allows authenticated users to retrieve a specific survey by its ID."
+            description = "Allows users to retrieve a specific survey by its ID."
     )
     public ResponseEntity<ResponseWrapper<SurveyResponseDto>> getSurveyById(
-            @PathVariable String surveyId,
-            Authentication authentication
+            @PathVariable String surveyId
     ) {
-        String userId = JwtManager.getUserId(authentication);
 
-        PublicSurvey survey = this.surveyService.getSurveyById(surveyId, userId);
+        PublicSurvey survey = this.surveyService.getSurveyById(surveyId);
 
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
@@ -144,14 +141,13 @@ public class PublicSurveyRouter {
     }
 
     @PostMapping("/{surveyId}/responses")
-    @PreAuthorize("isAuthenticated()")
     @Operation(
             summary = "Create responses for a survey",
             description = "Allows authenticated users to create responses for a specific survey by its ID."
     )
     public ResponseEntity<ResponseWrapper<List<String>>> createResponsesBySurveyId(
             @PathVariable String surveyId,
-            @RequestParam List<SaveSurveyResponsesDto> data
+            @RequestBody List<SaveSurveyResponsesDto> data
     ) {
         LocalDateTime timestamp = LocalDateTime.now();
 

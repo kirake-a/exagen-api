@@ -10,6 +10,8 @@ public interface PublicSurveyService {
 
     PublicSurvey getSurveyById(String surveyId, String userId);
 
+    PublicSurvey getSurveyById(String surveyId);
+
     List<PublicSurveyResponse> getAllSurveyResponsesBySurveyId(String surveyId, String userId);
 
     PublicSurvey createSurvey(PublicSurvey survey);
