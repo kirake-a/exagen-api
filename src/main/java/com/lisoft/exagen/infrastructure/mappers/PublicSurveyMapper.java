@@ -1,6 +1,8 @@
 package com.lisoft.exagen.infrastructure.mappers;
 
+import com.lisoft.exagen.application.dtos.ClosedQuestionDto;
 import com.lisoft.exagen.application.dtos.CreateSurveyRequestDto;
+import com.lisoft.exagen.application.dtos.SurveyResponseDto;
 import com.lisoft.exagen.domain.enums.SurveyStatusEnum;
 import com.lisoft.exagen.domain.models.PublicSurvey;
 import com.lisoft.exagen.infrastructure.schemas.ClosedQuestionSchema;
@@ -8,7 +10,9 @@ import com.lisoft.exagen.infrastructure.schemas.PublicSurveyResponseSchema;
 import com.lisoft.exagen.infrastructure.schemas.PublicSurveySchema;
 import com.lisoft.exagen.infrastructure.schemas.UserReference;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -96,6 +100,16 @@ public class PublicSurveyMapper {
                 0,
                 null,
                 null
+        );
+    }
+
+    public static SurveyResponseDto toResponseDto(PublicSurvey model) {
+
+        return new SurveyResponseDto(
+                model.id(),
+                model.title(),
+                model.totalResponses(),
+                model.closedQuestions()
         );
     }
 }

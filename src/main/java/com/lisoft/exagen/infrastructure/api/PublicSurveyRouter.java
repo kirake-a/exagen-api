@@ -5,6 +5,9 @@ import com.lisoft.exagen.application.dtos.ResponseWrapper;
 import com.lisoft.exagen.application.dtos.SurveyResponseDto;
 import com.lisoft.exagen.application.dtos.SurveyResponsesResponseDto;
 import com.lisoft.exagen.domain.enums.SurveyStatusEnum;
+import com.lisoft.exagen.domain.models.PublicSurvey;
+import com.lisoft.exagen.domain.templates.services.PublicSurveyService;
+import com.lisoft.exagen.infrastructure.mappers.PublicSurveyMapper;
 import com.lisoft.exagen.infrastructure.utils.JwtManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -26,6 +29,11 @@ import static com.lisoft.exagen.domain.utils.Constants.API_VERSION;
 @SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Surveys", description = "Endpoints for managing surveys")
 public class PublicSurveyRouter {
+    private final PublicSurveyService surveyService;
+
+    public  PublicSurveyRouter(PublicSurveyService surveyService) {
+        this.surveyService = surveyService;
+    }
 
     @GetMapping("/")
     @PreAuthorize("isAuthenticated()")
@@ -40,11 +48,15 @@ public class PublicSurveyRouter {
     ) {
         String userId = JwtManager.getUserId(authentication);
 
+        List<PublicSurvey> surveys = this.surveyService.getAllSurveysByUserId(userId);
+
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
-                        "",
-                        null
+                        "All surveys retrieved successfully",
+                        surveys.stream()
+                                .map(PublicSurveyMapper::toResponseDto)
+                                .toList()
                 ),
                 HttpStatus.OK
         );
@@ -62,11 +74,13 @@ public class PublicSurveyRouter {
     ) {
         String userId = JwtManager.getUserId(authentication);
 
+        PublicSurvey survey = this.surveyService.getSurveyById(surveyId, userId);
+
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
-                        "",
-                        null
+                        "We found a survey with the id: " +  surveyId,
+                        PublicSurveyMapper.toResponseDto(survey)
                 ),
                 HttpStatus.OK
         );
@@ -106,11 +120,15 @@ public class PublicSurveyRouter {
     ) {
         String userId = JwtManager.getUserId(authentication);
 
+        PublicSurvey createdSurvey = this.surveyService.createSurvey(
+                PublicSurveyMapper.createSurveyRequestDto2Model(data, userId)
+        );
+
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
-                        "",
-                        null
+                        "We successfully created a survey",
+                        PublicSurveyMapper.toResponseDto(createdSurvey)
                 ),
                 HttpStatus.OK
         );
@@ -150,11 +168,13 @@ public class PublicSurveyRouter {
     ) {
         String userId = JwtManager.getUserId(authentication);
 
+        PublicSurvey deletedSurvey = this.surveyService.deleteSurveyById(surveyId, userId);
+
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
-                        "",
-                        null
+                        "Survey with id " +  surveyId + " was deleted successfully",
+                        deletedSurvey.id()
                 ),
                 HttpStatus.OK
         );

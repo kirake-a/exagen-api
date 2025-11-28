@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public record PublicSurveyResponse(
         String id,
         String surveyId,
-        String closedQuestionId,
+        Integer closedQuestionId,
         String selectedAnswer,
         LocalDateTime answeredAt
 ) {}

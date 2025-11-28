@@ -1,10 +1,10 @@
 package com.lisoft.exagen.application.dtos;
 
-import java.util.List;
+import java.util.Set;
 
 public record SurveyResponseDto(
     String id,
     String title,
     Integer totalResponses,
-    List<ClosedQuestionDto> questions
+    Set<Integer> questions
 ) {}

@@ -17,6 +17,12 @@ public class DataValidator {
         }
     }
 
+    public static void validateNoEmptyString(String attributeName, String toCheck) {
+        if (Objects.isNull(toCheck) ||  toCheck.isEmpty()) {
+            throw new InvalidArgumentException(attributeName + " attribute cannot be null or empty");
+        }
+    }
+
     public static void validateQuestions2Add(List openQuestions, List closedQuestions) {
         if (openQuestions.isEmpty() && closedQuestions.isEmpty()) {
             throw new IllegalArgumentException("There are no questions to add");

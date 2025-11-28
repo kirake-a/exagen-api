@@ -23,4 +23,8 @@ public class Constants {
 
     public static final String CATEGORY_NOT_FOUND_MESSAGE = "Category not found";
     public static final String UNAUTHORIZED_ACCESS_2_CATEGORY = "Maybe your not authorized to access this category";
+
+    public static final String SURVEY_NOT_FOUND_MESSAGE = "Survey not found";
+    public static final String UNAUTHORIZED_ACCESS_2_SURVEY = "You do not have access to this survey";
+    public static final String SURVEY_OBJECT_IS_NULL = "Survey object is null";
 }
