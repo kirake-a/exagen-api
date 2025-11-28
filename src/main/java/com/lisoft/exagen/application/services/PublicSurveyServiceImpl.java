@@ -60,7 +60,17 @@ public class PublicSurveyServiceImpl implements PublicSurveyService {
     @Override
     @Transactional(readOnly = true)
     public List<PublicSurveyResponse> getAllSurveyResponsesBySurveyId(String surveyId, String userId) {
-        return List.of();
+        DataValidator.validateUserId(userId);
+        DataValidator.validateNoEmptyString("surveyId", surveyId);
+
+        PublicSurvey survey = this.publicSurveyRepository.findSurveyId(surveyId)
+                .orElseThrow(() -> new ResourceNotFoundException(SURVEY_NOT_FOUND_MESSAGE));
+
+        if (!survey.userId().equals(userId)) {
+            throw new UnauthorizedAccessException(UNAUTHORIZED_ACCESS_2_SURVEY);
+        }
+
+        return this.publicSurveyResponseRepository.findAllSurveyResponsesById(surveyId);
     }
 
     @Override
