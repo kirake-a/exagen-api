@@ -1,16 +1,16 @@
 package com.lisoft.exagen.infrastructure.mappers;
 
-import com.lisoft.exagen.application.dtos.ClosedQuestionDto;
 import com.lisoft.exagen.application.dtos.CreateSurveyRequestDto;
+import com.lisoft.exagen.application.dtos.PublicSurveyResponseDto;
 import com.lisoft.exagen.application.dtos.SurveyResponseDto;
 import com.lisoft.exagen.domain.enums.SurveyStatusEnum;
+import com.lisoft.exagen.domain.models.ClosedQuestion;
 import com.lisoft.exagen.domain.models.PublicSurvey;
 import com.lisoft.exagen.infrastructure.schemas.ClosedQuestionSchema;
 import com.lisoft.exagen.infrastructure.schemas.PublicSurveyResponseSchema;
 import com.lisoft.exagen.infrastructure.schemas.PublicSurveySchema;
 import com.lisoft.exagen.infrastructure.schemas.UserReference;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,8 +55,8 @@ public class PublicSurveyMapper {
                 new UserReference(model.userId()) : null;
 
         Set<ClosedQuestionSchema> closedQuestions = new HashSet<>();
-        if (model.closedQuestions() != null) {
-            closedQuestions = model.closedQuestions()
+        if (model.closedQuestionsIds() != null) {
+            closedQuestions = model.closedQuestionsIds()
                     .stream()
                     .map(id -> ClosedQuestionSchema.builder()
                             .id(id)
@@ -98,7 +98,7 @@ public class PublicSurveyMapper {
                 status,
                 userId,
                 0,
-                null,
+                requestDto.closedQuestionsIds(),
                 null
         );
     }
@@ -109,7 +109,21 @@ public class PublicSurveyMapper {
                 model.id(),
                 model.title(),
                 model.totalResponses(),
-                model.closedQuestions()
+                model.closedQuestionsIds()
+        );
+    }
+
+    public static PublicSurveyResponseDto toPublicSurveyResponseDto(
+            PublicSurvey model,
+            List<ClosedQuestion> questions
+    ) {
+        return new PublicSurveyResponseDto(
+                model.id(),
+                model.title(),
+                model.totalResponses(),
+                questions.stream()
+                        .map(ClosedQuestionMapper::toClosedQuestionDto)
+                        .toList()
         );
     }
 }

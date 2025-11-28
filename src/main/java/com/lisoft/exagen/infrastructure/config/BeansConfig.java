@@ -62,11 +62,13 @@ public class BeansConfig {
     @Bean
     PublicSurveyServiceImpl publicSurveyService(
             PublicSurveyRepository publicSurveyRepository,
-            PublicSurveyResponseRepository publicSurveyResponseRepository
+            PublicSurveyResponseRepository publicSurveyResponseRepository,
+            ClosedQuestionRepository closedQuestionRepository
     ) {
         return new PublicSurveyServiceImpl(
                 publicSurveyRepository,
-                publicSurveyResponseRepository
+                publicSurveyResponseRepository,
+                closedQuestionRepository
         );
     }
 }
