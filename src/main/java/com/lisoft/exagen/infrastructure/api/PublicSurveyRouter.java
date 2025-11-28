@@ -1,13 +1,12 @@
 package com.lisoft.exagen.infrastructure.api;
 
-import com.lisoft.exagen.application.dtos.CreateSurveyRequestDto;
-import com.lisoft.exagen.application.dtos.ResponseWrapper;
-import com.lisoft.exagen.application.dtos.SurveyResponseDto;
-import com.lisoft.exagen.application.dtos.SurveyResponsesResponseDto;
+import com.lisoft.exagen.application.dtos.*;
 import com.lisoft.exagen.domain.enums.SurveyStatusEnum;
 import com.lisoft.exagen.domain.models.PublicSurvey;
+import com.lisoft.exagen.domain.models.PublicSurveyResponse;
 import com.lisoft.exagen.domain.templates.services.PublicSurveyService;
 import com.lisoft.exagen.infrastructure.mappers.PublicSurveyMapper;
+import com.lisoft.exagen.infrastructure.mappers.PublicSurveyResponseMapper;
 import com.lisoft.exagen.infrastructure.utils.JwtManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -20,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.lisoft.exagen.domain.utils.Constants.API_VERSION;
@@ -140,17 +141,32 @@ public class PublicSurveyRouter {
             summary = "Create responses for a survey",
             description = "Allows authenticated users to create responses for a specific survey by its ID."
     )
-    public ResponseEntity<ResponseWrapper<String>> createResponsesBySurveyId(
+    public ResponseEntity<ResponseWrapper<List<String>>> createResponsesBySurveyId(
             @PathVariable String surveyId,
-            Authentication authentication
+            @RequestParam List<SaveSurveyResponsesDto> data
     ) {
-        String userId = JwtManager.getUserId(authentication);
+        LocalDateTime timestamp = LocalDateTime.now();
+
+        List<String> responseIds = new ArrayList<>();
+
+        for (SaveSurveyResponsesDto response : data) {
+
+            PublicSurveyResponse savedResponse = this.surveyService.createResponse(
+                    PublicSurveyResponseMapper.saveSurveyResponse2Model(
+                            response,
+                            surveyId,
+                            timestamp
+                    )
+            );
+
+            responseIds.add(savedResponse.id());
+        }
 
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
                         "",
-                        surveyId
+                        responseIds
                 ),
                 HttpStatus.OK
         );

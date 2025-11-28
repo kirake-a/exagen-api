@@ -27,4 +27,5 @@ public class Constants {
     public static final String SURVEY_NOT_FOUND_MESSAGE = "Survey not found";
     public static final String UNAUTHORIZED_ACCESS_2_SURVEY = "You do not have access to this survey";
     public static final String SURVEY_OBJECT_IS_NULL = "Survey object is null";
+    public static final String SURVEY_RESPONSE_CANNOT_BE_NUL_MESSAGE = "Survey response cannot be null";
 }

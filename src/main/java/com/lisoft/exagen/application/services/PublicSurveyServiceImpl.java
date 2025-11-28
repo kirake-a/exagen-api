@@ -77,7 +77,15 @@ public class PublicSurveyServiceImpl implements PublicSurveyService {
     @Override
     @Transactional
     public PublicSurveyResponse createResponse(PublicSurveyResponse surveyResponse) {
-        return null;
+        if (Objects.isNull(surveyResponse)) {
+            throw new InvalidArgumentException(SURVEY_RESPONSE_CANNOT_BE_NUL_MESSAGE);
+        }
+
+        this.publicSurveyRepository.findSurveyId(surveyResponse.surveyId())
+                .orElseThrow(() -> new ResourceNotFoundException(SURVEY_NOT_FOUND_MESSAGE));
+
+        logger.info("Creating survey response");
+        return this.publicSurveyResponseRepository.savePublicSurveyResponse(surveyResponse);
     }
 
     @Override
