@@ -6,5 +6,5 @@ import java.util.List;
 public record SurveyQuestionsDto(
         Integer id,
         LocalDateTime answeredAt,
-        List<String> options
+        String selectedAnswer
 ) {}

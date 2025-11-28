@@ -93,17 +93,25 @@ public class PublicSurveyRouter {
             summary = "Get all responses by survey ID",
             description = "Allows authenticated users to retrieve all responses for a specific survey by its ID."
     )
-    public ResponseEntity<ResponseWrapper<List<SurveyResponsesResponseDto>>> getAllResponsesBySurveyId(
+    public ResponseEntity<ResponseWrapper<SurveyResponsesResponseDto>> getAllResponsesBySurveyId(
             @PathVariable String surveyId,
             Authentication authentication
     ) {
         String userId = JwtManager.getUserId(authentication);
 
+        List<PublicSurveyResponse> surveyResponses = this.surveyService.getAllSurveyResponsesBySurveyId(surveyId, userId);
+        PublicSurvey survey = this.surveyService.getSurveyById(surveyId, userId);
+
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
                         "",
-                        null
+                        PublicSurveyResponseMapper.toResponseDto(
+                                surveyId,
+                                survey.title(),
+                                survey.totalResponses(),
+                                surveyResponses
+                        )
                 ),
                 HttpStatus.OK
         );
@@ -161,6 +169,8 @@ public class PublicSurveyRouter {
 
             responseIds.add(savedResponse.id());
         }
+
+        this.surveyService.updateTotalResponesByOne(surveyId);
 
         return new ResponseEntity<>(
                 new ResponseWrapper<>(

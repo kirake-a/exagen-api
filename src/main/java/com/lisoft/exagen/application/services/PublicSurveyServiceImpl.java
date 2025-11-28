@@ -60,7 +60,17 @@ public class PublicSurveyServiceImpl implements PublicSurveyService {
     @Override
     @Transactional(readOnly = true)
     public List<PublicSurveyResponse> getAllSurveyResponsesBySurveyId(String surveyId, String userId) {
-        return List.of();
+        DataValidator.validateUserId(userId);
+        DataValidator.validateNoEmptyString("surveyId", surveyId);
+
+        PublicSurvey survey = this.publicSurveyRepository.findSurveyId(surveyId)
+                .orElseThrow(() -> new ResourceNotFoundException(SURVEY_NOT_FOUND_MESSAGE));
+
+        if (!survey.userId().equals(userId)) {
+            throw new UnauthorizedAccessException(UNAUTHORIZED_ACCESS_2_SURVEY);
+        }
+
+        return this.publicSurveyResponseRepository.findAllSurveyResponsesById(surveyId);
     }
 
     @Override
@@ -86,6 +96,16 @@ public class PublicSurveyServiceImpl implements PublicSurveyService {
 
         logger.info("Creating survey response");
         return this.publicSurveyResponseRepository.savePublicSurveyResponse(surveyResponse);
+    }
+
+    @Override
+    public void updateTotalResponesByOne(String surveyId) {
+        if (Objects.isNull(surveyId)) {
+            logger.error("Survey Id can't be null");
+            throw new IllegalArgumentException("surveyId can't be null");
+        }
+
+        this.publicSurveyRepository.updateTotalResponsesByOne(surveyId);
     }
 
     @Override
