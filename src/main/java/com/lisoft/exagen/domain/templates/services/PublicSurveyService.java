@@ -16,5 +16,7 @@ public interface PublicSurveyService {
 
     PublicSurveyResponse createResponse(PublicSurveyResponse surveyResponse);
 
+    void updateTotalResponesByOne(String surveyId);
+
     PublicSurvey deleteSurveyById(String surveyId, String userId);
 }

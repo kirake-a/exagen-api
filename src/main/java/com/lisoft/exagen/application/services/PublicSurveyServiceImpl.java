@@ -89,6 +89,16 @@ public class PublicSurveyServiceImpl implements PublicSurveyService {
     }
 
     @Override
+    public void updateTotalResponesByOne(String surveyId) {
+        if (Objects.isNull(surveyId)) {
+            logger.error("Survey Id can't be null");
+            throw new IllegalArgumentException("surveyId can't be null");
+        }
+
+        this.publicSurveyRepository.updateTotalResponsesByOne(surveyId);
+    }
+
+    @Override
     @Transactional
     public PublicSurvey deleteSurveyById(String surveyId, String userId) {
         DataValidator.validateUserId(userId);

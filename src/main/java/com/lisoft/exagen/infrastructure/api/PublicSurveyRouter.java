@@ -162,6 +162,8 @@ public class PublicSurveyRouter {
             responseIds.add(savedResponse.id());
         }
 
+        this.surveyService.updateTotalResponesByOne(surveyId);
+
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
