@@ -8,6 +8,6 @@ public record PublicSurvey(
         String status,
         String userId,
         Integer totalResponses,
-        Set<Integer> closedQuestions,
+        Set<Integer> closedQuestionsIds,
         Set<String> responses
 ) {}

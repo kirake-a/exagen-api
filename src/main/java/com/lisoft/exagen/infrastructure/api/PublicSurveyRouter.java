@@ -2,6 +2,7 @@ package com.lisoft.exagen.infrastructure.api;
 
 import com.lisoft.exagen.application.dtos.*;
 import com.lisoft.exagen.domain.enums.SurveyStatusEnum;
+import com.lisoft.exagen.domain.models.ClosedQuestion;
 import com.lisoft.exagen.domain.models.PublicSurvey;
 import com.lisoft.exagen.domain.models.PublicSurveyResponse;
 import com.lisoft.exagen.domain.templates.services.PublicSurveyService;
@@ -68,17 +69,22 @@ public class PublicSurveyRouter {
             summary = "Get survey by ID",
             description = "Allows users to retrieve a specific survey by its ID."
     )
-    public ResponseEntity<ResponseWrapper<SurveyResponseDto>> getSurveyById(
+    public ResponseEntity<ResponseWrapper<PublicSurveyResponseDto>> getSurveyById(
             @PathVariable String surveyId
     ) {
 
         PublicSurvey survey = this.surveyService.getSurveyById(surveyId);
+        List<ClosedQuestion> questions = new ArrayList<>();
+
+        for (Integer questionId : survey.closedQuestionsIds()) {
+            questions.add(this.surveyService.getClosedQuestion(questionId));
+        }
 
         return new ResponseEntity<>(
                 new ResponseWrapper<>(
                         true,
                         "We found a survey with the id: " +  surveyId,
-                        PublicSurveyMapper.toResponseDto(survey)
+                        PublicSurveyMapper.toPublicSurveyResponseDto(survey, questions)
                 ),
                 HttpStatus.OK
         );

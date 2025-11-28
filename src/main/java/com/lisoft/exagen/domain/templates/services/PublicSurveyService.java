@@ -1,5 +1,6 @@
 package com.lisoft.exagen.domain.templates.services;
 
+import com.lisoft.exagen.domain.models.ClosedQuestion;
 import com.lisoft.exagen.domain.models.PublicSurvey;
 import com.lisoft.exagen.domain.models.PublicSurveyResponse;
 
@@ -13,6 +14,8 @@ public interface PublicSurveyService {
     PublicSurvey getSurveyById(String surveyId);
 
     List<PublicSurveyResponse> getAllSurveyResponsesBySurveyId(String surveyId, String userId);
+
+    ClosedQuestion getClosedQuestion(Integer questionId);
 
     PublicSurvey createSurvey(PublicSurvey survey);
 

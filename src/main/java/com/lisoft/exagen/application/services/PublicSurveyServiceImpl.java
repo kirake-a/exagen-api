@@ -3,8 +3,10 @@ package com.lisoft.exagen.application.services;
 import com.lisoft.exagen.domain.exceptions.InvalidArgumentException;
 import com.lisoft.exagen.domain.exceptions.ResourceNotFoundException;
 import com.lisoft.exagen.domain.exceptions.UnauthorizedAccessException;
+import com.lisoft.exagen.domain.models.ClosedQuestion;
 import com.lisoft.exagen.domain.models.PublicSurvey;
 import com.lisoft.exagen.domain.models.PublicSurveyResponse;
+import com.lisoft.exagen.domain.templates.repositories.ClosedQuestionRepository;
 import com.lisoft.exagen.domain.templates.repositories.PublicSurveyRepository;
 import com.lisoft.exagen.domain.templates.repositories.PublicSurveyResponseRepository;
 import com.lisoft.exagen.domain.templates.services.PublicSurveyService;
@@ -21,15 +23,18 @@ import static com.lisoft.exagen.domain.utils.Constants.*;
 public class PublicSurveyServiceImpl implements PublicSurveyService {
     private final PublicSurveyRepository publicSurveyRepository;
     private final PublicSurveyResponseRepository publicSurveyResponseRepository;
+    private final ClosedQuestionRepository closedQuestionRepository;
 
     private final Logger logger = LoggerFactory.getLogger(PublicSurveyServiceImpl.class);
 
     public PublicSurveyServiceImpl(
             PublicSurveyRepository publicSurveyRepository,
-            PublicSurveyResponseRepository publicSurveyResponseRepository
+            PublicSurveyResponseRepository publicSurveyResponseRepository,
+            ClosedQuestionRepository closedQuestionRepository
     ) {
         this.publicSurveyRepository = publicSurveyRepository;
         this.publicSurveyResponseRepository = publicSurveyResponseRepository;
+        this.closedQuestionRepository = closedQuestionRepository;
     }
 
     @Override
@@ -58,6 +63,7 @@ public class PublicSurveyServiceImpl implements PublicSurveyService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PublicSurvey getSurveyById(String surveyId) {
         DataValidator.validateNoEmptyString("surveyId", surveyId);
 
@@ -79,6 +85,13 @@ public class PublicSurveyServiceImpl implements PublicSurveyService {
         }
 
         return this.publicSurveyResponseRepository.findAllSurveyResponsesById(surveyId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ClosedQuestion getClosedQuestion(Integer questionId) {
+        return this.closedQuestionRepository.getClosedQuestionById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException(QUESTION_NOT_FOUND_MESSAGE));
     }
 
     @Override
@@ -107,6 +120,7 @@ public class PublicSurveyServiceImpl implements PublicSurveyService {
     }
 
     @Override
+    @Transactional
     public void updateTotalResponesByOne(String surveyId) {
         if (Objects.isNull(surveyId)) {
             logger.error("Survey Id can't be null");
